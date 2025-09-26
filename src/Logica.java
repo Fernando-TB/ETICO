@@ -47,6 +47,13 @@ public class Logica {
     }
     private String crearPromptParaGemini(Map<String, Map<String, List<String>>> horarios, int duracion) {
 
+        StringBuilder sb = new StringBuilder();
+        sb.append("Analiza los siguientes horarios ocupados para un grupo de personas. ");
+        sb.append("Necesito encontrar un bloque de tiempo libre de ").append(duracion).append(" minutos que sirva para todos.");
+        sb.append("Responde SOLO con el horario de inicio y fin en formato ISO 8601 (YYYY-MM-DDTHH:MM:SS-HH:MM:SS), sin texto adicional. ");
+        sb.append("Datos de horarios:\n").append(horarios.toString());
+        return sb.toString();
+
 
     }
 
