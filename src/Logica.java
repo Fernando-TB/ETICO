@@ -19,7 +19,7 @@ public class Logica {
     }
 
     public void agendarReunion(List<String> trabajadores, String titulo, int duracion) {
-        //manejador consola va a tener un metodo de imprimirMensaje
+
         manejadorConsola.imprimirMensaje("\n--- Iniciando el proceso para agendar la reunion: '" + titulo + "' ---");
         try {
             Map<String, Map<String, List<String>>> horariosDeTodos = new HashMap<>();
