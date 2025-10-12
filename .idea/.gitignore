@@ -1,3 +1,17 @@
-# Default ignored files
+Directorios de compilación de Maven
+
+target/
+out/
+.idea/
+Archivos de credenciales sensibles (¡CRÍTICO!)
+
+**/credentials.json
+Tokens de autenticación generados por Google
+
+**/tokens/
+Archivos de salida de la aplicación
+
+*.txt
+*.csv# Default ignored files
 /shelf/
 /workspace.xml

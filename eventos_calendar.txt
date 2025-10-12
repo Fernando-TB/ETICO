@@ -1,0 +1,432 @@
+
+--------------------------------------------------
+Título:      Despertar
+Fecha/Hora:  2025-10-06T06:30:00.000-03:00
+Ubicación:   N/A
+ID Evento:   4h8msc281mn7rb97d5h3ks9ug3_20251006T093000Z
+
+--------------------------------------------------
+Título:      Desayuno
+Fecha/Hora:  2025-10-06T07:00:00.000-03:00
+Ubicación:   N/A
+ID Evento:   3ahk9odvejgv48n7bkupu432o7_20251006T100000Z
+
+--------------------------------------------------
+Título:      Td
+Fecha/Hora:  2025-10-06T08:30:00.000-03:00
+Ubicación:   N/A
+ID Evento:   66cpefs00c0e0etk7c3afihk7g_20251006T113000Z
+
+--------------------------------------------------
+Título:      Gym
+Fecha/Hora:  2025-10-06T09:45:00.000-03:00
+Ubicación:   N/A
+ID Evento:   60s38d9gc5h6cbb56hhj0b9kcorjab9ochj34b9kc9h32dpo6dh3eopp70_20251006T124500Z
+
+--------------------------------------------------
+Título:      Colacion 1
+Fecha/Hora:  2025-10-06T10:30:00.000-03:00
+Ubicación:   N/A
+ID Evento:   5a0oc2l21v0l43sol1cnedno5k_20251006T133000Z
+
+--------------------------------------------------
+Título:      Almuerzo
+Fecha/Hora:  2025-10-06T13:00:00.000-03:00
+Ubicación:   N/A
+ID Evento:   2m2vl2k349phk7p7gbc27fvnks_20251006T160000Z
+
+--------------------------------------------------
+Título:      Colacion 2
+Fecha/Hora:  2025-10-06T15:00:00.000-03:00
+Ubicación:   N/A
+ID Evento:   09nukvr81fdc2arpri2rlkhvos_20251006T180000Z
+
+--------------------------------------------------
+Título:      FISICA II
+Fecha/Hora:  2025-10-06T15:30:00.000-03:00
+Ubicación:   N/A
+ID Evento:   chj66phl71j30b9ncpj3cb9k6goj2bb26di3ib9ncdimccphcdijidhk6s_20251006T183000Z
+
+--------------------------------------------------
+Título:      Estudio
+Fecha/Hora:  2025-10-06T16:45:00.000-03:00
+Ubicación:   N/A
+ID Evento:   61jfruvfeu9u6q0asjnkadvnb6_20251006T194500Z
+
+--------------------------------------------------
+Título:      Colacion 3
+Fecha/Hora:  2025-10-06T17:30:00.000-03:00
+Ubicación:   N/A
+ID Evento:   7jcb951cblndanb17b5smkkhvq_20251006T203000Z
+
+--------------------------------------------------
+Título:      Judo
+Fecha/Hora:  2025-10-06T19:00:00.000-03:00
+Ubicación:   N/A
+ID Evento:   101f7bdq870op32tgova6c4d1i_20251006T220000Z
+
+--------------------------------------------------
+Título:      Once/Cena
+Fecha/Hora:  2025-10-06T22:00:00.000-03:00
+Ubicación:   N/A
+ID Evento:   7loprp7bjp6hspm3jb8glna6nj_20251007T010000Z
+
+--------------------------------------------------
+Título:      Colacion 4 (OPCIONAL)
+Fecha/Hora:  2025-10-06T23:15:00.000-03:00
+Ubicación:   N/A
+ID Evento:   7ishdr5km8m78k89asmt1c3le4_20251007T021500Z
+
+--------------------------------------------------
+Título:      Dormir
+Fecha/Hora:  2025-10-06T23:30:00.000-03:00
+Ubicación:   N/A
+ID Evento:   032u92v8r19jk06md81qke7jl9_20251007T023000Z
+
+--------------------------------------------------
+Título:      Despertar
+Fecha/Hora:  2025-10-07T06:30:00.000-03:00
+Ubicación:   N/A
+ID Evento:   4h8msc281mn7rb97d5h3ks9ug3_20251007T093000Z
+
+--------------------------------------------------
+Título:      Desayuno
+Fecha/Hora:  2025-10-07T07:00:00.000-03:00
+Ubicación:   N/A
+ID Evento:   3ahk9odvejgv48n7bkupu432o7_20251007T100000Z
+
+--------------------------------------------------
+Título:      Edo1
+Fecha/Hora:  2025-10-07T08:30:00.000-03:00
+Ubicación:   N/A
+ID Evento:   6mkodtdsva7dlclcdf5g7ao6jk_20251007T113000Z
+
+--------------------------------------------------
+Título:      Colacion 1
+Fecha/Hora:  2025-10-07T10:30:00.000-03:00
+Ubicación:   N/A
+ID Evento:   5a0oc2l21v0l43sol1cnedno5k_20251007T133000Z
+
+--------------------------------------------------
+Título:      Almuerzo
+Fecha/Hora:  2025-10-07T13:00:00.000-03:00
+Ubicación:   N/A
+ID Evento:   2m2vl2k349phk7p7gbc27fvnks_20251007T160000Z
+
+--------------------------------------------------
+Título:      Colacion 2
+Fecha/Hora:  2025-10-07T15:00:00.000-03:00
+Ubicación:   N/A
+ID Evento:   09nukvr81fdc2arpri2rlkhvos_20251007T180000Z
+
+--------------------------------------------------
+Título:      FISICA II
+Fecha/Hora:  2025-10-07T15:30:00.000-03:00
+Ubicación:   N/A
+ID Evento:   6sp3adhochhjibb571hm6b9k6tgjcb9o75gm6bb36gqm8e32ccomcpb570_20251007T183000Z
+
+--------------------------------------------------
+Título:      estudio
+Fecha/Hora:  2025-10-07T16:40:00.000-03:00
+Ubicación:   N/A
+ID Evento:   1luf2qt8p59o6uf8kedoeocfls_20251007T194000Z
+
+--------------------------------------------------
+Título:      Colacion 3
+Fecha/Hora:  2025-10-07T17:30:00.000-03:00
+Ubicación:   N/A
+ID Evento:   7jcb951cblndanb17b5smkkhvq_20251007T203000Z
+
+--------------------------------------------------
+Título:      Frances 2
+Fecha/Hora:  2025-10-07T18:00:00.000-03:00
+Ubicación:   N/A
+ID Evento:   c8p3ip33c8q6cb9lcgs3eb9k65ijgb9o65gm2bb66cr62p34c8sm2chj6k_20251007T210000Z
+
+--------------------------------------------------
+Título:      Judo
+Fecha/Hora:  2025-10-07T20:00:00.000-03:00
+Ubicación:   N/A
+ID Evento:   16g0bcnentp763vo5l1drudeh4_20251007T230000Z
+
+--------------------------------------------------
+Título:      Once/Cena
+Fecha/Hora:  2025-10-07T22:00:00.000-03:00
+Ubicación:   N/A
+ID Evento:   7loprp7bjp6hspm3jb8glna6nj_20251008T010000Z
+
+--------------------------------------------------
+Título:      Colacion 4 (OPCIONAL)
+Fecha/Hora:  2025-10-07T23:15:00.000-03:00
+Ubicación:   N/A
+ID Evento:   7ishdr5km8m78k89asmt1c3le4_20251008T021500Z
+
+--------------------------------------------------
+Título:      Dormir
+Fecha/Hora:  2025-10-07T23:30:00.000-03:00
+Ubicación:   N/A
+ID Evento:   032u92v8r19jk06md81qke7jl9_20251008T023000Z
+
+--------------------------------------------------
+Título:      Despertar
+Fecha/Hora:  2025-10-08T06:30:00.000-03:00
+Ubicación:   N/A
+ID Evento:   4h8msc281mn7rb97d5h3ks9ug3_20251008T093000Z
+
+--------------------------------------------------
+Título:      Desayuno
+Fecha/Hora:  2025-10-08T07:00:00.000-03:00
+Ubicación:   N/A
+ID Evento:   3ahk9odvejgv48n7bkupu432o7_20251008T100000Z
+
+--------------------------------------------------
+Título:      Gym
+Fecha/Hora:  2025-10-08T07:30:00.000-03:00
+Ubicación:   N/A
+ID Evento:   coomcd3170o36bb5cos3eb9k74rjibb264om6b9kcgo64e9n6kr3cp3570_20251008T103000Z
+
+--------------------------------------------------
+Título:      Colacion 1
+Fecha/Hora:  2025-10-08T10:30:00.000-03:00
+Ubicación:   N/A
+ID Evento:   5a0oc2l21v0l43sol1cnedno5k_20251008T133000Z
+
+--------------------------------------------------
+Título:      Pe1
+Fecha/Hora:  2025-10-08T10:50:00.000-03:00
+Ubicación:   N/A
+ID Evento:   41rbdojn335g1dkh5ompnfq3h9_20251008T135000Z
+
+--------------------------------------------------
+Título:      Almuerzo
+Fecha/Hora:  2025-10-08T13:00:00.000-03:00
+Ubicación:   N/A
+ID Evento:   2m2vl2k349phk7p7gbc27fvnks_20251008T160000Z
+
+--------------------------------------------------
+Título:      Tutoria calculo 1
+Fecha/Hora:  2025-10-08T13:00:00.000-03:00
+Ubicación:   N/A
+ID Evento:   6ss34p336sojcbb264om8b9k6himabb2cor6cb9o6oo68o9kcgr62d9lco_20251008T160000Z
+
+--------------------------------------------------
+Título:      Tc
+Fecha/Hora:  2025-10-08T14:30:00.000-03:00
+Ubicación:   N/A
+ID Evento:   cgo3gcpmcks3ib9o6gq68b9k68qjibb164sm6bb5c9j68e1lcgo6aeb36o_20251008T173000Z
+
+--------------------------------------------------
+Título:      Colacion 2
+Fecha/Hora:  2025-10-08T15:00:00.000-03:00
+Ubicación:   N/A
+ID Evento:   09nukvr81fdc2arpri2rlkhvos_20251008T180000Z
+
+--------------------------------------------------
+Título:      FISICA II
+Fecha/Hora:  2025-10-08T16:40:00.000-03:00
+Ubicación:   N/A
+ID Evento:   6hh36pj6ccp64b9o60p30b9k6oqmab9p6dijeb9ic4o3edpg6lhm2ob3c8_20251008T194000Z
+
+--------------------------------------------------
+Título:      Tc
+Fecha/Hora:  2025-10-08T16:50:00.000-03:00
+Ubicación:   N/A
+ID Evento:   5l9f6uhdsva5f1i2fes3941dsc_20251008T195000Z
+
+--------------------------------------------------
+Título:      Colacion 3
+Fecha/Hora:  2025-10-08T17:30:00.000-03:00
+Ubicación:   N/A
+ID Evento:   7jcb951cblndanb17b5smkkhvq_20251008T203000Z
+
+--------------------------------------------------
+Título:      Judo
+Fecha/Hora:  2025-10-08T19:00:00.000-03:00
+Ubicación:   N/A
+ID Evento:   4nq9jueh9mnvamp427gtugfqsh_20251008T220000Z
+
+--------------------------------------------------
+Título:      Once/Cena
+Fecha/Hora:  2025-10-08T22:00:00.000-03:00
+Ubicación:   N/A
+ID Evento:   7loprp7bjp6hspm3jb8glna6nj_20251009T010000Z
+
+--------------------------------------------------
+Título:      Colacion 4 (OPCIONAL)
+Fecha/Hora:  2025-10-08T23:15:00.000-03:00
+Ubicación:   N/A
+ID Evento:   7ishdr5km8m78k89asmt1c3le4_20251009T021500Z
+
+--------------------------------------------------
+Título:      Dormir
+Fecha/Hora:  2025-10-08T23:30:00.000-03:00
+Ubicación:   N/A
+ID Evento:   032u92v8r19jk06md81qke7jl9_20251009T023000Z
+
+--------------------------------------------------
+Título:      Despertar
+Fecha/Hora:  2025-10-09T06:30:00.000-03:00
+Ubicación:   N/A
+ID Evento:   4h8msc281mn7rb97d5h3ks9ug3_20251009T093000Z
+
+--------------------------------------------------
+Título:      Desayuno
+Fecha/Hora:  2025-10-09T07:00:00.000-03:00
+Ubicación:   N/A
+ID Evento:   3ahk9odvejgv48n7bkupu432o7_20251009T100000Z
+
+--------------------------------------------------
+Título:      POO
+Fecha/Hora:  2025-10-09T08:30:00.000-03:00
+Ubicación:   N/A
+ID Evento:   6lhmae3570o32bb271im6b9kcop3ab9p68rj0b9jc8qmcpb4cor3gpb4co_20251009T113000Z
+
+--------------------------------------------------
+Título:      Colacion 1
+Fecha/Hora:  2025-10-09T10:30:00.000-03:00
+Ubicación:   N/A
+ID Evento:   5a0oc2l21v0l43sol1cnedno5k_20251009T133000Z
+
+--------------------------------------------------
+Título:      Tutoria calculo 2
+Fecha/Hora:  2025-10-09T11:00:00.000-03:00
+Ubicación:   N/A
+ID Evento:   6ko36p1i6sq6ab9m60qj4b9kcgpjgbb261hj0bb46dj3gphj6go38dhmcc_20251009T140000Z
+
+--------------------------------------------------
+Título:      Almuerzo
+Fecha/Hora:  2025-10-09T13:00:00.000-03:00
+Ubicación:   N/A
+ID Evento:   2m2vl2k349phk7p7gbc27fvnks_20251009T160000Z
+
+--------------------------------------------------
+Título:      Pe1
+Fecha/Hora:  2025-10-09T14:30:00.000-03:00
+Ubicación:   N/A
+ID Evento:   6vgmjlv87kuvcaqln9p8gav8bn_20251009T173000Z
+
+--------------------------------------------------
+Título:      Colacion 2
+Fecha/Hora:  2025-10-09T15:00:00.000-03:00
+Ubicación:   N/A
+ID Evento:   09nukvr81fdc2arpri2rlkhvos_20251009T180000Z
+
+--------------------------------------------------
+Título:      Edo1
+Fecha/Hora:  2025-10-09T16:50:00.000-03:00
+Ubicación:   N/A
+ID Evento:   70r3ep9gc8pjcb9m68q3ab9kcksjcbb26kqjabb5ckpm4c9kckp34c35ck_20251009T195000Z
+
+--------------------------------------------------
+Título:      Colacion 3
+Fecha/Hora:  2025-10-09T17:30:00.000-03:00
+Ubicación:   N/A
+ID Evento:   7jcb951cblndanb17b5smkkhvq_20251009T203000Z
+
+--------------------------------------------------
+Título:      Judo
+Fecha/Hora:  2025-10-09T20:00:00.000-03:00
+Ubicación:   N/A
+ID Evento:   38d091q457dubo6i2ho0jgfije_20251009T230000Z
+
+--------------------------------------------------
+Título:      Once/Cena
+Fecha/Hora:  2025-10-09T22:00:00.000-03:00
+Ubicación:   N/A
+ID Evento:   7loprp7bjp6hspm3jb8glna6nj_20251010T010000Z
+
+--------------------------------------------------
+Título:      Colacion 4 (OPCIONAL)
+Fecha/Hora:  2025-10-09T23:15:00.000-03:00
+Ubicación:   N/A
+ID Evento:   7ishdr5km8m78k89asmt1c3le4_20251010T021500Z
+
+--------------------------------------------------
+Título:      Dormir
+Fecha/Hora:  2025-10-09T23:30:00.000-03:00
+Ubicación:   N/A
+ID Evento:   032u92v8r19jk06md81qke7jl9_20251010T023000Z
+
+--------------------------------------------------
+Título:      Despertar
+Fecha/Hora:  2025-10-10T06:30:00.000-03:00
+Ubicación:   N/A
+ID Evento:   4h8msc281mn7rb97d5h3ks9ug3_20251010T093000Z
+
+--------------------------------------------------
+Título:      Desayuno
+Fecha/Hora:  2025-10-10T07:00:00.000-03:00
+Ubicación:   N/A
+ID Evento:   3ahk9odvejgv48n7bkupu432o7_20251010T100000Z
+
+--------------------------------------------------
+Título:      POO
+Fecha/Hora:  2025-10-10T08:30:00.000-03:00
+Ubicación:   N/A
+ID Evento:   ccsj8chhcksm6b9j6sqjcb9k6ph66bb174p3cb9n6ko3ad1gc4sj0d33ck_20251010T113000Z
+
+--------------------------------------------------
+Título:      Colacion 1
+Fecha/Hora:  2025-10-10T10:30:00.000-03:00
+Ubicación:   N/A
+ID Evento:   5a0oc2l21v0l43sol1cnedno5k_20251010T133000Z
+
+--------------------------------------------------
+Título:      Td12
+Fecha/Hora:  2025-10-10T10:50:00.000-03:00
+Ubicación:   N/A
+ID Evento:   6goj2d1j6kp38bb4ccp68b9kcgqm8bb16ss3gb9n6cp3ic9gc8om2chi74_20251010T135000Z
+
+--------------------------------------------------
+Título:      Almuerzo
+Fecha/Hora:  2025-10-10T13:00:00.000-03:00
+Ubicación:   N/A
+ID Evento:   2m2vl2k349phk7p7gbc27fvnks_20251010T160000Z
+
+--------------------------------------------------
+Título:      Colacion 2
+Fecha/Hora:  2025-10-10T15:00:00.000-03:00
+Ubicación:   N/A
+ID Evento:   09nukvr81fdc2arpri2rlkhvos_20251010T180000Z
+
+--------------------------------------------------
+Título:      Gym
+Fecha/Hora:  2025-10-10T15:15:00.000-03:00
+Ubicación:   N/A
+ID Evento:   cdhmcd36cpj36bb16dj38b9k6ph3cb9ocdi36b9hcks3ao9o74oj2cpj70_20251010T181500Z
+
+--------------------------------------------------
+Título:      Colacion 3
+Fecha/Hora:  2025-10-10T17:30:00.000-03:00
+Ubicación:   N/A
+ID Evento:   7jcb951cblndanb17b5smkkhvq_20251010T203000Z
+
+--------------------------------------------------
+Título:      Once/Cena
+Fecha/Hora:  2025-10-10T22:00:00.000-03:00
+Ubicación:   N/A
+ID Evento:   7loprp7bjp6hspm3jb8glna6nj_20251011T010000Z
+
+--------------------------------------------------
+Título:      Colacion 4 (OPCIONAL)
+Fecha/Hora:  2025-10-10T23:15:00.000-03:00
+Ubicación:   N/A
+ID Evento:   7ishdr5km8m78k89asmt1c3le4_20251011T021500Z
+
+--------------------------------------------------
+Título:      Dormir
+Fecha/Hora:  2025-10-10T23:30:00.000-03:00
+Ubicación:   N/A
+ID Evento:   032u92v8r19jk06md81qke7jl9_20251011T023000Z
+
+--------------------------------------------------
+Título:      Gym
+Fecha/Hora:  2025-10-11T10:00:00.000-03:00
+Ubicación:   N/A
+ID Evento:   61h34cr5c4s6ab9l6gom4b9kcgs6abb26tij0b9nccqjed9n60o38dr2cc_20251011T130000Z
+
+--------------------------------------------------
+Título:      Bus to Term. Puerto Montt (Diego Portales 1001)
+Fecha/Hora:  2025-10-11T20:00:00.000-03:00
+Ubicación:   Term. Temuco Rodoviario (Vic. Pérez Rosales #01609)
+ID Evento:   8orbedddmn291m2dvlfdqvebc4
