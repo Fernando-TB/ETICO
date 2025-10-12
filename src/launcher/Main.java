@@ -1,3 +1,11 @@
+package launcher;
+
+import controlador.ManejadorConsola;
+import modelo.APILeerCalendar;
+import modelo.APIGemini;
+import modelo.APIEscribirCalendar;
+import modelo.Logica;
+
 import java.util.List;
 
 public class Main {
@@ -13,7 +21,6 @@ public class Main {
         Logica coordinadorDeLogica = new Logica(apiLeerCalendar, apiGemini, apiEscribirCalendar, manejadorConsola);
 
 
-        //Definimos los datos de la reunion
         List<String> participantes = List.of("jefe@ejemplo.com", "trabajador1@ejemplo.com", "trabajador2@ejemplo.com");
         String tituloReunion = "Reunion de Sincronizacion del Proyecto";
         int duracionMinutos = 30;
@@ -23,6 +30,7 @@ public class Main {
         coordinadorDeLogica.agendarReunion(participantes, tituloReunion, duracionMinutos);
 
     }
+
 
 
 }

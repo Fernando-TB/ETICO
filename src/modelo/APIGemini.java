@@ -1,4 +1,4 @@
-
+package modelo;
 
 public class APIGemini {
     public String analizarYEncontrarHorario(String prompt) {
