@@ -39,11 +39,4 @@ public class Main {
 //
 //        coordinadorDeLogica.agendarReunion(participantes, tituloReunion, duracionMinutos);
 //  }
-
-
-
-
-
-
-
 }

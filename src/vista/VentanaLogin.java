@@ -69,7 +69,9 @@ public class VentanaLogin {
             });
 
             botonRegistro.addActionListener(e -> {
-                System.out.println("Hacia ventana de Registro");
+                VentanaRegistro ventanaRegistro = new VentanaRegistro();
+                ventanaRegistro.mostrar();
+                this.ocultar();
             });
 
         }
