@@ -8,7 +8,6 @@ import java.awt.event.ActionListener;
 public class VentanaLogin {
 
     private final JFrame frame;
-
     private JTextField campoUsuario;
     private JPasswordField campoContrasena;
     private JButton botonLogin;
@@ -31,6 +30,8 @@ public class VentanaLogin {
 
         panel.add(new JLabel("Correo Electronico:"));
         panel.add(campoUsuario);
+
+        panel.add(new JLabel("Contraseña:"));
         panel.add(campoContrasena);
 
         panel.add(new JLabel());
@@ -80,5 +81,13 @@ public class VentanaLogin {
             } else {
                 JOptionPane.showMessageDialog(frame, "Login exitoso como Trabajador.");
             }
+        }
+
+        public void mostrar() {
+            frame.setVisible(true);
+        }
+
+        public void ocultar() {
+            frame.dispose();
         }
     }
