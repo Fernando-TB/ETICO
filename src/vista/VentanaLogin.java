@@ -88,6 +88,15 @@ public class VentanaLogin {
         String rol = logueo.obtenerRol(usuario, contrasena);
 
         if (rol != null) {
+            if  (rol.equals("Trabajador")) {
+                VentanaTrabajador ventanatrabajador = new VentanaTrabajador(registroUsuarios, logueo);
+                ventanatrabajador.mostrar();
+                this.frame.dispose();
+            }else if  (rol.equals("Jefe")) {
+                VentanaJefe ventanajefe = new VentanaJefe(registroUsuarios, logueo);
+                ventanajefe.mostrar();
+                this.frame.dispose();
+            }
             JOptionPane.showMessageDialog(frame, "Login exitoso como " + rol + ".");
             this.ocultar();
         } else {
