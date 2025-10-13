@@ -30,7 +30,16 @@ public class VentanaRegistro {
         this.registroUsuarios = registroUsuarios;
 
 
-        this.frame = new JFrame("Registro");
+        this.frame = new JFrame("Registro - ETICO");
+
+        //ICONO
+        try {
+            ImageIcon Logo = new ImageIcon(getClass().getResource("/LOGO.png"));
+            frame.setIconImage(Logo.getImage());
+
+        } catch (Exception e) {
+            System.err.println("Error al abrir el LOGO");
+        }
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(400, 250);

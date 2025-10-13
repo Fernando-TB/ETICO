@@ -21,7 +21,16 @@ public class VentanaLogin {
         this.registroUsuarios = registroUsuarios;
         this.logueo = logueo;
 
-        this.frame = new JFrame("Iniciar Sesion");
+        this.frame = new JFrame("Iniciar Sesion - ETICO");
+
+        //ICONO
+        try {
+            ImageIcon Logo = new ImageIcon(getClass().getResource("/LOGO.png"));
+            frame.setIconImage(Logo.getImage());
+
+        } catch (Exception e) {
+            System.err.println("Error al abrir el LOGO");
+        }
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(400, 250);

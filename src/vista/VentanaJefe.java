@@ -24,6 +24,15 @@ public class VentanaJefe {
 
         this.frame = new JFrame("Panel de Jefe - ETICO");
 
+        //ICONO
+        try {
+            ImageIcon Logo = new ImageIcon(getClass().getResource("/LOGO.png"));
+            frame.setIconImage(Logo.getImage());
+
+        } catch (Exception e) {
+            System.err.println("Error al abrir el LOGO");
+        }
+
 
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setSize(300, 250);
