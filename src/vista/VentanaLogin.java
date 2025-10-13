@@ -1,5 +1,6 @@
 package vista;
 
+import modelo.Logueo;
 import modelo.Registrar;
 
 import javax.swing.*;
@@ -8,7 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class VentanaLogin {
-
+    private final Logueo logueo;
     private final JFrame frame;
     private final Registrar registroUsuarios;
     private JTextField campoUsuario;
@@ -16,8 +17,9 @@ public class VentanaLogin {
     private JButton botonLogin;
     private JButton botonRegistro;
 
-    public VentanaLogin(Registrar registroUsuarios) {
+    public VentanaLogin(Registrar registroUsuarios, Logueo logueo) {
         this.registroUsuarios = registroUsuarios;
+        this.logueo = logueo;
 
         this.frame = new JFrame("Iniciar Sesion");
 
@@ -74,8 +76,7 @@ public class VentanaLogin {
         botonRegistro.addActionListener(e -> {
             this.ocultar();
             SwingUtilities.invokeLater(() -> {
-                VentanaRegistro ventanaRegistro = new VentanaRegistro(registroUsuarios);
-                ventanaRegistro.mostrar();
+                new VentanaRegistro(registroUsuarios, logueo).mostrar();
             });
 
 
@@ -84,7 +85,7 @@ public class VentanaLogin {
     }
 
     private void verificarLogin(String usuario, String contrasena) {
-        String rol = registroUsuarios.obtenerRol(usuario, contrasena);
+        String rol = logueo.obtenerRol(usuario, contrasena);
 
         if (rol != null) {
             JOptionPane.showMessageDialog(frame, "Login exitoso como " + rol + ".");

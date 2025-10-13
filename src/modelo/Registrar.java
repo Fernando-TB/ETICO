@@ -13,20 +13,37 @@ public class Registrar {
     private final Map<String, Map<String, String>> baseDeDatosSimulada;
 
     public Registrar() {
+
+
         this.baseDeDatosSimulada = new HashMap<>();
+
+        File archivo = new File(RUTA_ARCHIVO);
+        boolean archivoExiste = archivo.exists();
 
         cargarUsuariosDesdeArchivo();
 
-        if (baseDeDatosSimulada.isEmpty()) {
 
+        if (!archivoExiste && baseDeDatosSimulada.isEmpty()) {
             Map<String, String> jefe = new HashMap<>();
             jefe.put("contrasena", "1234");
-            jefe.put("rol", "jefe");
+            jefe.put("rol", "Jefe");
             baseDeDatosSimulada.put("jefe@jefe.com", jefe);
-            System.out.println("Base de datos iniciada por defecto");
-        }
 
+
+            guardarUsuarioEnArchivo();
+            System.out.println("Base de datos inicializada con usuario por defecto y guardada en disco.");
+        } else if (archivoExiste && baseDeDatosSimulada.isEmpty()) {
+            System.out.println("Archivo de usuarios no pudo ser leido, iniciando sin usuarios");
+        } else  {
+            System.out.println("Usuarios cargados correctamente del archivo");
+        }
     }
+
+
+    public Map<String, Map<String, String>> getBaseDeDatos() {
+        return baseDeDatosSimulada;
+    }
+
 
     public boolean guardarUsuario(String correo, String contrasena, String rol) {
         if (baseDeDatosSimulada.containsKey(correo)) {
@@ -45,24 +62,16 @@ public class Registrar {
         System.out.println("Usuario registrado");
         return true;
     }
-
-    public String obtenerRol(String correo, String contrasena) {
-        if (baseDeDatosSimulada.containsKey(correo)) {
-            Map<String, String> datos = baseDeDatosSimulada.get(correo);
-
-            if (datos.get("contrasena").equals(contrasena)) {
-                System.out.println("Login exitoso");
-                return datos.get("rol");
-            }
-        }
-        System.out.println("Fallo de logueo");
-        return null;
-    }
-
     private void guardarUsuarioEnArchivo() {
         try (PrintWriter writer = new PrintWriter(RUTA_ARCHIVO)) {
 
-            writer.print(baseDeDatosSimulada.toString());
+            for (Map.Entry<String, Map<String, String>> entry : baseDeDatosSimulada.entrySet()) {
+                String correo = entry.getKey();
+                String contrasena = entry.getValue().get("contrasena");
+                String rol = entry.getValue().get("rol");
+
+                writer.println(correo + ";" + contrasena + ";" + rol);
+            }
             System.out.println("Datos guardados en " + RUTA_ARCHIVO);
         } catch (FileNotFoundException e) {
             System.err.println("No se pudo escribir en el archivo JSON.");
@@ -71,48 +80,31 @@ public class Registrar {
 
     private void cargarUsuariosDesdeArchivo() {
         File archivo = new File(RUTA_ARCHIVO);
-        if (!archivo.exists()) {
-            System.out.println("Persistencia: Archivo JSON no encontrado. Iniciando vacío.");
-            return;
-        }
+        if (!archivo.exists()) return;
 
         try (Scanner scanner = new Scanner(archivo)) {
-            // Leer la única línea del archivo
-            String contenido = scanner.nextLine();
+            baseDeDatosSimulada.clear();
+            while (scanner.hasNextLine()) {
+                String linea = scanner.nextLine();
+                if (linea.trim().isEmpty()) continue;
 
-            if (contenido.isEmpty() || contenido.equals("{}")) return;
+                String[] partes = linea.split(";", 3);
 
+                if (partes.length == 3) {
 
-            String limpio = contenido.substring(1, contenido.length() - 1);
-            String[] entradas = limpio.split(",\\s*");
-
-            for (String entrada : entradas) {
-                if (entrada.contains("=")) {
-                    String[] partes = entrada.split("=", 2); // Separar correo y datos
                     String correo = partes[0].trim();
-                    String datosString = partes[1].trim();
-
+                    String contrasena = partes[1].trim();
+                    String rol = partes[2].trim();
 
                     Map<String, String> datos = new HashMap<>();
-                    String limpioDatos = datosString.substring(1, datosString.length() - 1);
-                    String[] pares = limpioDatos.split(",\\s*");
+                    datos.put("contrasena", contrasena);
+                    datos.put("rol", rol);
 
-                    for (String par : pares) {
-                        String[] kv = par.split("=", 2);
-                        if (kv.length == 2) {
-                            datos.put(kv[0].trim(), kv[1].trim());
-                        }
-                    }
                     baseDeDatosSimulada.put(correo, datos);
                 }
             }
-            System.out.println("Usuarios cargados desde " + RUTA_ARCHIVO);
-
         } catch (FileNotFoundException e) {
-            System.err.println("No se pudo leer el archivo JSON.");
-        } catch (Exception e) {
-            System.err.println("Falló la reconstrucción de datos del archivo. Ignorando datos.");
-            baseDeDatosSimulada.clear();
+            System.err.println("ERROR: No se pudo leer el archivo de usuarios.");
         }
     }
 

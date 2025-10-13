@@ -1,6 +1,7 @@
 package vista;
 
 import modelo.Registrar;
+import modelo.Logueo;
 
 import javax.swing.*;
 import java.awt.*;
@@ -8,8 +9,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Objects;
 
+
 public class VentanaRegistro {
 
+
+    private final Logueo logueo;
     private final JFrame frame;
     private final Registrar registroUsuarios;
     private JTextField campoCorreo;
@@ -19,7 +23,9 @@ public class VentanaRegistro {
     private JButton botonVolver;
     private JButton botonRegistrar;
 
-    public VentanaRegistro(Registrar registroUsuarios) {
+    public VentanaRegistro(Registrar registroUsuarios, Logueo logueo) {
+
+        this.logueo = logueo;
 
         this.registroUsuarios = registroUsuarios;
 
@@ -115,7 +121,7 @@ public class VentanaRegistro {
     private void irALogin() {
         this.ocultar();
         SwingUtilities.invokeLater(() -> {
-            new VentanaLogin(registroUsuarios).mostrar();
+            new VentanaLogin(registroUsuarios, logueo).mostrar();
         });
     }
 
