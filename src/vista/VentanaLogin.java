@@ -1,5 +1,7 @@
 package vista;
 
+import modelo.Registrar;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -8,12 +10,14 @@ import java.awt.event.ActionListener;
 public class VentanaLogin {
 
     private final JFrame frame;
+    private final Registrar registroUsuarios;
     private JTextField campoUsuario;
     private JPasswordField campoContrasena;
     private JButton botonLogin;
     private JButton botonRegistro;
 
-    public VentanaLogin() {
+    public VentanaLogin(Registrar registroUsuarios) {
+        this.registroUsuarios = registroUsuarios;
 
         this.frame = new JFrame("Iniciar Sesion");
 
@@ -52,38 +56,43 @@ public class VentanaLogin {
         agregarListeners();
     }
 
-        private void agregarListeners() {
-            botonLogin.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    String usuario = campoUsuario.getText();
-                    char[] password = campoContrasena.getPassword();
+    private void agregarListeners() {
+        botonLogin.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String usuario = campoUsuario.getText();
+                String password = new String(campoContrasena.getPassword());
 
-                    System.out.println("Intento de Login para: " + usuario);
+                System.out.println("Intento de Login para: " + usuario);
 
-                    simularLogin(usuario);
+                verificarLogin(usuario, password);
 
-                    for (int i = 0; i < password.length; i++) {
-                        password[i] = 0;
-                    }
-                }
-            });
+                campoUsuario.setText("");
 
-            botonRegistro.addActionListener(e -> {
-                VentanaRegistro ventanaRegistro = new VentanaRegistro();
-                ventanaRegistro.mostrar();
-                this.ocultar();
-            });
-
-        }
-
-        private void simularLogin(String usuario) {
-
-            if (usuario.toLowerCase().contains("jefe")) {
-                JOptionPane.showMessageDialog(frame, "Login exitoso como Jefe.");
-            } else {
-                JOptionPane.showMessageDialog(frame, "Login exitoso como Trabajador.");
             }
+        });
+
+        botonRegistro.addActionListener(e -> {
+            this.ocultar();
+            SwingUtilities.invokeLater(() -> {
+                VentanaRegistro ventanaRegistro = new VentanaRegistro(registroUsuarios);
+                ventanaRegistro.mostrar();
+            });
+
+
+        });
+
+    }
+
+    private void verificarLogin(String usuario, String contrasena) {
+        String rol = registroUsuarios.obtenerRol(usuario, contrasena);
+
+        if (rol != null) {
+            JOptionPane.showMessageDialog(frame, "Login exitoso como " + rol + ".");
+            this.ocultar();
+        } else {
+            JOptionPane.showMessageDialog(frame, "Login incorrecto.");
         }
+    }
 
         public void mostrar() {
             frame.setVisible(true);
@@ -92,4 +101,5 @@ public class VentanaLogin {
         public void ocultar() {
             frame.dispose();
         }
-    }
+
+}

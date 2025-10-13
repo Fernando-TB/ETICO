@@ -1,10 +1,7 @@
 package launcher;
 
 import controlador.ManejadorConsola;
-import modelo.APILeerCalendar;
-import modelo.APIGemini;
-import modelo.APIEscribirCalendar;
-import modelo.Logica;
+import modelo.*;
 import vista.VentanaLogin;
 
 import javax.swing.*;
@@ -13,8 +10,10 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) {
 
+        Registrar registroUsuarios = new Registrar();
+
         SwingUtilities.invokeLater(() -> {
-            VentanaLogin login = new VentanaLogin();
+            VentanaLogin login = new VentanaLogin(registroUsuarios);
             login.mostrar();
 
         });

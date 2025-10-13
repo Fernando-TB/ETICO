@@ -1,13 +1,17 @@
 package vista;
 
+import modelo.Registrar;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Objects;
 
 public class VentanaRegistro {
 
     private final JFrame frame;
+    private final Registrar registroUsuarios;
     private JTextField campoCorreo;
     private JPasswordField campoContrasena;
     private JPasswordField campoConfirmar;
@@ -15,7 +19,10 @@ public class VentanaRegistro {
     private JButton botonVolver;
     private JButton botonRegistrar;
 
-    public VentanaRegistro() {
+    public VentanaRegistro(Registrar registroUsuarios) {
+
+        this.registroUsuarios = registroUsuarios;
+
 
         this.frame = new JFrame("Registro");
 
@@ -65,8 +72,38 @@ public class VentanaRegistro {
     }
 
     private void agregarListeners() {
+
+
+
         botonRegistrar.addActionListener(e -> {
+
+            String correo = campoCorreo.getText();
+            String rol = (String) selectorRol.getSelectedItem();
+            String contrasena = new String(campoContrasena.getPassword());
+            String confirmar = new String(campoConfirmar.getPassword());
+
+
+
+        //Comprobar que la contraseña confirmada sea igual
+        if (Objects.equals(contrasena, confirmar)) {
             System.out.println("Registrando Usuario");
+        } else {
+
+            JOptionPane.showMessageDialog(frame, "Los campos de contraseñas no coinciden");
+        }
+
+        if (registroUsuarios.guardarUsuario(correo, contrasena, rol)) {
+            JOptionPane.showMessageDialog(frame, "Usuario registrado con éxito. Vuelva al Login.", "Registro Exitoso", JOptionPane.INFORMATION_MESSAGE);
+
+            campoCorreo.setText("");
+            campoContrasena.setText("");
+            campoConfirmar.setText("");
+
+            irALogin();
+        } else {
+            JOptionPane.showMessageDialog(frame, "Error: El correo ya está registrado.", "Error de Registro", JOptionPane.ERROR_MESSAGE);
+        }
+
         });
 
         botonVolver.addActionListener(e -> {
@@ -78,7 +115,7 @@ public class VentanaRegistro {
     private void irALogin() {
         this.ocultar();
         SwingUtilities.invokeLater(() -> {
-            new VentanaLogin().mostrar();
+            new VentanaLogin(registroUsuarios).mostrar();
         });
     }
 
