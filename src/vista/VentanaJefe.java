@@ -17,12 +17,12 @@ public class VentanaJefe {
     private JButton botonVolverLogin;
 
 
-    public VentanaJefe(Registrar registroUsuarios, Logueo logueo) {
+    public VentanaJefe(String usuario, Registrar registroUsuarios, Logueo logueo, String contrasena) {
 
         this.registroUsuarios = registroUsuarios;
         this.logueo = logueo;
 
-        this.frame = new JFrame("Panel de Jefe - ETICO");
+        this.frame = new JFrame("Ventana de Jefe - ETICO");
 
         //ICONO
         try {
@@ -60,18 +60,21 @@ public class VentanaJefe {
 
         frame.add(panelBotones, BorderLayout.CENTER);
         frame.add(panelNavegacion, BorderLayout.SOUTH);
+        String rol = "Jefe";
+        agregarListeners(usuario, contrasena, rol);
 
-        agregarListeners();
     }
 
-    private void agregarListeners() {
+    private void agregarListeners(String usuario, String contrasena, String rol) {
 
         botonVolverLogin.addActionListener(e -> {
             irALogin();
         });
 
         botonVerHorario.addActionListener(e -> {
-            JOptionPane.showMessageDialog(frame, "Funcionalidad 'Ver Horario' no implementada.");
+            CalendarioVista calendariovista = new CalendarioVista(usuario, registroUsuarios, logueo, rol, contrasena);
+            calendariovista.mostrar();
+            this.frame.dispose();
         });
 
         botonReunionObligatoria.addActionListener(e -> {

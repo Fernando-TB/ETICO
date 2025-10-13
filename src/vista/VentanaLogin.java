@@ -5,8 +5,7 @@ import modelo.Registrar;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 
 public class VentanaLogin {
     private final Logueo logueo;
@@ -68,6 +67,18 @@ public class VentanaLogin {
     }
 
     private void agregarListeners() {
+
+        KeyListener enterKeyListener = new KeyAdapter() {
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    botonLogin.doClick();
+                }
+            }
+        };
+
+        campoUsuario.addKeyListener(enterKeyListener);
+        campoContrasena.addKeyListener(enterKeyListener);
+
         botonLogin.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String usuario = campoUsuario.getText();
@@ -78,6 +89,7 @@ public class VentanaLogin {
                 verificarLogin(usuario, password);
 
                 campoUsuario.setText("");
+                campoContrasena.setText("");
 
             }
         });
@@ -87,10 +99,7 @@ public class VentanaLogin {
             SwingUtilities.invokeLater(() -> {
                 new VentanaRegistro(registroUsuarios, logueo).mostrar();
             });
-
-
         });
-
     }
 
     private void verificarLogin(String usuario, String contrasena) {
@@ -98,15 +107,14 @@ public class VentanaLogin {
 
         if (rol != null) {
             if  (rol.equals("Trabajador")) {
-                VentanaTrabajador ventanatrabajador = new VentanaTrabajador(registroUsuarios, logueo);
+                VentanaTrabajador ventanatrabajador = new VentanaTrabajador(registroUsuarios, logueo, usuario, contrasena);
                 ventanatrabajador.mostrar();
                 this.frame.dispose();
             }else if  (rol.equals("Jefe")) {
-                VentanaJefe ventanajefe = new VentanaJefe(registroUsuarios, logueo);
+                VentanaJefe ventanajefe = new VentanaJefe(usuario, registroUsuarios, logueo, contrasena);
                 ventanajefe.mostrar();
                 this.frame.dispose();
             }
-            JOptionPane.showMessageDialog(frame, "Login exitoso como " + rol + ".");
             this.ocultar();
         } else {
             JOptionPane.showMessageDialog(frame, "Login incorrecto.");
