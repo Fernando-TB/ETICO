@@ -1,52 +1,69 @@
-package com.etico;
+package launcher;
 
+import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.model.Event;
-// Importamos las clases directamente, ya que están en el mismo paquete.
-import APILeerCalendar;
-import ConversorCSV;
+import controlador.ConversorCSV;
+import modelo.APILeerCalendar;
+import modelo.APIEscribirCalendar;
+import modelo.PedirPermisosCalendar;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.text.ParseException;
 import java.util.List;
+import java.util.Scanner;
 
 public class Main {
-    /**
-     * Punto de entrada principal para el programa.
-     * Actúa como el orquestador que:
-     * 1. Lee los eventos de Google Calendar (usando APILeerCalendar).
-     * 2. Convierte y guarda los eventos en un archivo .txt (usando ConversorCSV).
-     */
-    public static void main(String[] args) {
-        System.out.println("--- INICIO DE ORQUESTACIÓN ETICO ---");
 
-        // 1. Inicializar la ruta del archivo de salida
-        String nombreArchivoSalida = "eventos_calendar.txt";
-
+    public static void main(String... args) {
         try {
-            // 2. Obtener la instancia de la API y leer los eventos del calendario
-            APILeerCalendar apiCalendar = new APILeerCalendar();
-            List<Event> eventos = apiCalendar.obtenerProximosEventos();
+            System.out.println("   Iniciando la descarga de los datos");
 
-            if (eventos.isEmpty()) {
-                System.out.println("No se encontraron eventos próximos para exportar.");
-                return;
-            }
+            Calendar service = PedirPermisosCalendar.getCalendarService();
 
-            // 3. Inicializar el conversor y escribir los datos en el archivo
-            ConversorCSV conversor = new ConversorCSV();
-            conversor.escribirEventosAArchivo(eventos, nombreArchivoSalida);
+            runReadModule(service);
 
-            System.out.println("\n✅ Éxito: Se han exportado " + eventos.size() +
-                    " eventos al archivo: " + nombreArchivoSalida);
+            runWriteModule(service);
 
-        } catch (IOException e) {
-            System.err.println("Error de I/O (lectura o escritura): " + e.getMessage());
-        } catch (GeneralSecurityException e) {
-            System.err.println("Error de seguridad o autorización de la API: " + e.getMessage());
-        } catch (Exception e) {
-            System.err.println("Ocurrió un error inesperado: " + e.getMessage());
-        } finally {
-            System.out.println("\n--- FIN DE ORQUESTACIÓN ETICO ---");
+        } catch (IOException | GeneralSecurityException e) {
+            System.err.println("\n ERROR FATAL DE CONEXIÓN O AUTENTICACIÓN:");
+            System.err.println("Asegúrate de que la API de Calendar esté habilitada y de haber autorizado la aplicación en el navegador.");
+            System.err.println("Detalles: " + e.getMessage());
+        } catch (ParseException e) {
+            System.err.println("\n ERROR DE FORMATO DE FECHA: " + e.getMessage());
+        }
+    }
+
+    private static void runReadModule(Calendar service) throws IOException {
+        APILeerCalendar apiReader = new APILeerCalendar();
+
+        System.out.println("\n==================================================");
+        System.out.println("      MÓDULO DE LECTURA (Eventos Lunes-Sábado)     ");
+        System.out.println("==================================================");
+
+        List<Event> items = apiReader.obtenerProximosEventos(service);
+
+        if (items.isEmpty()) {
+            System.out.println("No se encontraron eventos próximos para exportar.");
+            return;
+        }
+
+        ConversorCSV conversor = new ConversorCSV();
+        conversor.guardarEventosEnCSV(items);
+    }
+
+    private static void runWriteModule(Calendar service) throws IOException, ParseException {
+        APIEscribirCalendar apiWriter = new APIEscribirCalendar();
+
+        System.out.print("¿Deseas crear un nuevo evento en tu Google Calendar? (s/n): ");
+
+        Scanner scanner = new Scanner(System.in);
+        String response = scanner.nextLine().trim().toLowerCase();
+
+        if (response.equals("s")) {
+            apiWriter.createEventFromConsole(service);
+        } else {
+            System.out.println("Finalizando aplicación. ¡Hasta pronto!");
         }
     }
 }

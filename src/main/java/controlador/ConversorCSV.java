@@ -1,4 +1,4 @@
-package modelo; // Paquete simple
+package controlador;
 
 import com.google.api.services.calendar.model.Event;
 import com.google.api.client.util.DateTime;
@@ -8,52 +8,61 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
-/**
- * Se encarga de formatear una lista de eventos y escribirlos en un archivo de texto.
- * NOTA: Esta clase asume la responsabilidad de la escritura de archivos.
- */
 public class ConversorCSV {
 
-    /**
-     * Convierte la lista de eventos al formato deseado y la escribe en el archivo.
-     * @param eventos Lista de eventos de Google Calendar.
-     * @param nombreArchivo Nombre del archivo de salida (e.g., "eventos.txt").
-     * @throws IOException Si ocurre un error al escribir el archivo.
-     */
-    public void escribirEventosAArchivo(List<Event> eventos, String nombreArchivo) throws IOException {
+    private static final String NOMBRE_ARCHIVO_SALIDA = "eventos_filtrados.txt";
 
-        // Utilizamos try-with-resources para asegurar que PrintWriter se cierre automáticamente
-        try (PrintWriter writer = new PrintWriter(new FileWriter(nombreArchivo))) {
+    public void guardarEventosEnCSV(List<Event> eventos) {
+        if (eventos == null || eventos.isEmpty()) {
+            System.out.println("Advertencia: La lista de eventos está vacía. No se creará el archivo.");
+            return;
+        }
 
-            // Escribir el encabezado del archivo
-            writer.println("Título del Evento | Fecha de Inicio | Fecha de Fin | Descripción | Estado");
-            writer.println("--------------------------------------------------------------------------------------------------------------------------------------");
+        try (FileWriter fileWriter = new FileWriter(NOMBRE_ARCHIVO_SALIDA);
+             PrintWriter printWriter = new PrintWriter(fileWriter)) {
+
+            System.out.printf("\nIniciando escritura de %d eventos en el archivo: %s\n",
+                    eventos.size(), NOMBRE_ARCHIVO_SALIDA);
+
+            printWriter.println("Titulo | Hora Inicio | Hora Fin | Creador| Descripción ");
 
             for (Event evento : eventos) {
-                // Obtener datos del evento
-                String summary = evento.getSummary() != null ? evento.getSummary() : "(Sin Título)";
-                String description = evento.getDescription() != null ? evento.getDescription().replace("\n", " ").trim() : "(Sin Descripción)";
-                String status = evento.getStatus() != null ? evento.getStatus() : "No especificado";
-
-                // Formato de fecha/hora (usa el objeto DateTime de Google para obtener las estampas)
-                DateTime startDateTime = evento.getStart() != null ? evento.getStart().getDateTime() : null;
-                DateTime endDateTime = evento.getEnd() != null ? evento.getEnd().getDateTime() : null;
-
-                String fechaInicio = startDateTime != null ? startDateTime.toStringRfc3339() : "(Fecha no especificada)";
-                String fechaFin = endDateTime != null ? endDateTime.toStringRfc3339() : "(Fecha no especificada)";
-
-                // Crear la línea en el formato solicitado (separador '|' para simular CSV/separación)
-                String linea = String.format("%s | %s | %s | %s | %s",
-                        summary,
-                        fechaInicio,
-                        fechaFin,
-                        description,
-                        status);
-
-                writer.println(linea);
+                String linea = formatEventLine(evento);
+                printWriter.println(linea);
             }
 
-            System.out.println("Conversión y escritura completada en el disco.");
+            System.out.println("Escritura completada con éxito. Archivo creado.");
+
+        } catch (IOException e) {
+            System.err.println("ERROR al escribir el archivo: " + e.getMessage());
         }
+    }
+
+
+    private String formatEventLine(Event evento) {
+        String summary = cleanString(evento.getSummary());
+        String description = cleanString(evento.getDescription());
+        String creator = cleanString(evento.getCreator() != null ? evento.getCreator().getEmail() : "Desconocido");
+
+        String startTime = formatDateTime(evento.getStart() != null ? evento.getStart().getDateTime() : null);
+        String endTime = formatDateTime(evento.getEnd() != null ? evento.getEnd().getDateTime() : null);
+
+        return String.format("%s | %s | %s | %s | %s",
+                summary, startTime, endTime, creator, description);
+    }
+
+
+    private String formatDateTime(DateTime dateTime) {
+        if (dateTime == null) {
+            return "N/A";
+        }
+        return dateTime.toStringRfc3339();
+    }
+
+    private String cleanString(String input) {
+        if (input == null || input.isEmpty()) {
+            return "N/A";
+        }
+        return input.replaceAll("\\r\\n|\\r|\\n", " ").trim();
     }
 }
