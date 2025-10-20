@@ -25,7 +25,7 @@ public class ConversorCSV {
                     eventos.size(), NOMBRE_ARCHIVO_SALIDA);
 
             printWriter.println("Titulo | Hora Inicio | Hora Fin | Creador| Descripción ");
-
+//a
             for (Event evento : eventos) {
                 String linea = formatEventLine(evento);
                 printWriter.println(linea);
