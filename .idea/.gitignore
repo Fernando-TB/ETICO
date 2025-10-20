@@ -1,17 +1,21 @@
-Directorios de compilación de Maven
-
+# --------------------------------------------------------------------------
+# DIRECTORIOS DE COMPILACIÓN E IGNORADOS POR MAVEN/IDE
+# --------------------------------------------------------------------------
 target/
 out/
 .idea/
-Archivos de credenciales sensibles (¡CRÍTICO!)
-
-**/credentials.json
-Tokens de autenticación generados por Google
-
-**/tokens/
-Archivos de salida de la aplicación
-
-*.txt
-*.csv# Default ignored files
+*.iml
+*.iws
+*.ipr
 /shelf/
 /workspace.xml
+
+# --------------------------------------------------------------------------
+# ARCHIVOS SENSIBLES Y SECRETOS (¡CRÍTICO! NUNCA SUBIR)
+# --------------------------------------------------------------------------
+# 1. Credenciales de la API (OAuth Client ID/Secret)
+**/credentials.json
+
+# 2. Tokens de acceso generados por Google (carpeta 'tokens')
+# Esto ignora la carpeta completa 'tokens' y su contenido.
+**/tokens/
