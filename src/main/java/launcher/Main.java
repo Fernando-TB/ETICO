@@ -1,4 +1,4 @@
-package launcher;//A
+package launcher;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.model.Event;
 import controlador.ConversorCSV;
