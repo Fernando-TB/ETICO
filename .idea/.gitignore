@@ -1,3 +1,13 @@
-# Default ignored files
+
+target/
+out/
+.idea/
+*.iml
+*.iws
+*.ipr
 /shelf/
 /workspace.xml
+
+**/src/main/resources/credentials.json
+
+**/tokens/
