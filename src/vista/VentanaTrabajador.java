@@ -1,26 +1,26 @@
 package vista;
 
-import modelo.Registrar;
-import modelo.Logueo;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.Calendar;
 
+import controlador.IControladorNavegacion;
+import controlador.IControladorAutenticacion;
+
 public class VentanaTrabajador {
 
     private final JFrame frame;
-    private final Registrar registroUsuarios;
-    private final Logueo logueo;
+    private final IControladorAutenticacion autenticador;
+    private final IControladorNavegacion navegador;
 
     private JButton botonVerHorario;
 
     private JButton botonVolverLogin;
 
 
-    public VentanaTrabajador(Registrar registroUsuarios, Logueo logueo, String usuario, String contrasena) {
-        this.registroUsuarios = registroUsuarios;
-        this.logueo = logueo;
+    public VentanaTrabajador(IControladorNavegacion navegador, IControladorAutenticacion autenticador, String usuario, String contrasena) {
+        this.navegador = navegador;
+        this.autenticador = autenticador;
 
         this.frame = new JFrame("Ventana de Trabajador - ETICO");
 
@@ -67,24 +67,23 @@ public class VentanaTrabajador {
 
     private void agregarListeners(String usuario, String contrasena, String rol) {
 
+
+
         botonVolverLogin.addActionListener(e -> {
+            navegador.cerrarVentanaActual(this.frame);
             irALogin();
         });
 
         botonVerHorario.addActionListener(e -> {
 
-            CalendarioVista calendariovista = new CalendarioVista(usuario, registroUsuarios, logueo, rol, contrasena);
-            calendariovista.mostrar();
-            this.frame.dispose();
+            navegador.navegarACalendarioVista(usuario, contrasena, rol);
         });
 
     }
 
     private void irALogin() {
-        this.ocultar();
-        SwingUtilities.invokeLater(() -> {
-            new VentanaLogin(registroUsuarios, logueo).mostrar();
-        });
+        navegador.cerrarVentanaActual(this.frame);
+        navegador.navegarALogin();
     }
 
 

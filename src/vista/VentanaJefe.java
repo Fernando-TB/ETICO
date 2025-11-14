@@ -1,7 +1,7 @@
 package vista;
-
-import modelo.Registrar;
-import modelo.Logueo;
+import controlador.IControladorAgendamiento;
+import controlador.IControladorAutenticacion;
+import controlador.IControladorNavegacion;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,18 +9,19 @@ import java.awt.*;
 public class VentanaJefe {
 
     private final JFrame frame;
-    private final Registrar registroUsuarios;
-    private final Logueo logueo;
 
     private JButton botonVerHorario;
     private JButton botonReunionObligatoria;
     private JButton botonVolverLogin;
 
+    private final IControladorNavegacion navegador;
+    private final IControladorAgendamiento agendador;
 
-    public VentanaJefe(String usuario, Registrar registroUsuarios, Logueo logueo, String contrasena) {
 
-        this.registroUsuarios = registroUsuarios;
-        this.logueo = logueo;
+    public VentanaJefe(String usuario, IControladorNavegacion navegador, IControladorAgendamiento agendador) {
+
+        this.navegador = navegador;
+        this.agendador = agendador;
 
         this.frame = new JFrame("Ventana de Jefe - ETICO");
 
@@ -61,20 +62,22 @@ public class VentanaJefe {
         frame.add(panelBotones, BorderLayout.CENTER);
         frame.add(panelNavegacion, BorderLayout.SOUTH);
         String rol = "Jefe";
-        agregarListeners(usuario, contrasena, rol);
+        agregarListeners(usuario, rol);
 
     }
 
-    private void agregarListeners(String usuario, String contrasena, String rol) {
+    private void agregarListeners(String usuario, String rol) {
+
+
 
         botonVolverLogin.addActionListener(e -> {
             irALogin();
+            navegador.cerrarVentanaActual(this.frame);
         });
 
         botonVerHorario.addActionListener(e -> {
-            CalendarioVista calendariovista = new CalendarioVista(usuario, registroUsuarios, logueo, rol, contrasena);
-            calendariovista.mostrar();
-            this.frame.dispose();
+            navegador.navegarACalendarioVista(usuario, null, rol);
+            navegador.cerrarVentanaActual(this.frame);
         });
 
         botonReunionObligatoria.addActionListener(e -> {
@@ -85,10 +88,8 @@ public class VentanaJefe {
     }
 
     private void irALogin() {
-        this.ocultar();
-        SwingUtilities.invokeLater(() -> {
-            new VentanaLogin(registroUsuarios, logueo).mostrar();
-        });
+        navegador.cerrarVentanaActual(this.frame);
+        navegador.navegarALogin();
     }
 
 

@@ -7,18 +7,24 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
+import controlador.IControladorAutenticacion;
+import controlador.IControladorNavegacion;
+
 public class VentanaLogin {
-    private final Logueo logueo;
+
+    private final IControladorAutenticacion autenticador;
+    private final IControladorNavegacion navegador;
+
     private final JFrame frame;
-    private final Registrar registroUsuarios;
     private JTextField campoUsuario;
     private JPasswordField campoContrasena;
     private JButton botonLogin;
     private JButton botonRegistro;
 
-    public VentanaLogin(Registrar registroUsuarios, Logueo logueo) {
-        this.registroUsuarios = registroUsuarios;
-        this.logueo = logueo;
+
+    public VentanaLogin(IControladorAutenticacion autenticador, IControladorNavegacion navegador) {
+        this.autenticador = autenticador;
+        this.navegador = navegador;
 
         this.frame = new JFrame("Iniciar Sesion - ETICO");
 
@@ -79,43 +85,33 @@ public class VentanaLogin {
         campoUsuario.addKeyListener(enterKeyListener);
         campoContrasena.addKeyListener(enterKeyListener);
 
-        botonLogin.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                String usuario = campoUsuario.getText();
-                String password = new String(campoContrasena.getPassword());
-
-                System.out.println("Intento de Login para: " + usuario);
-
-                verificarLogin(usuario, password);
-
-                campoUsuario.setText("");
-                campoContrasena.setText("");
-
-            }
+        botonLogin.addActionListener(e ->  {
+            String usuario = campoUsuario.getText();
+            String password = new String(campoContrasena.getPassword());
+            verificarLogin(usuario, password);
+            navegador.cerrarVentanaActual(this.frame);
         });
 
         botonRegistro.addActionListener(e -> {
             this.ocultar();
             SwingUtilities.invokeLater(() -> {
-                new VentanaRegistro(registroUsuarios, logueo).mostrar();
+                navegador.navegarARegistro();
+                navegador.cerrarVentanaActual(this.frame);
             });
         });
     }
 
     private void verificarLogin(String usuario, String contrasena) {
-        String rol = logueo.obtenerRol(usuario, contrasena);
+        String rol = autenticador.intentarLogin(usuario, contrasena);
 
         if (rol != null) {
+
             if  (rol.equals("Trabajador")) {
-                VentanaTrabajador ventanatrabajador = new VentanaTrabajador(registroUsuarios, logueo, usuario, contrasena);
-                ventanatrabajador.mostrar();
-                this.frame.dispose();
+                navegador.navegarAVentanaTrabajador(usuario, contrasena);
             }else if  (rol.equals("Jefe")) {
-                VentanaJefe ventanajefe = new VentanaJefe(usuario, registroUsuarios, logueo, contrasena);
-                ventanajefe.mostrar();
-                this.frame.dispose();
+                navegador.navegarAVentanaJefe(usuario, contrasena);
             }
-            this.ocultar();
+
         } else {
             JOptionPane.showMessageDialog(frame, "Login incorrecto.");
         }

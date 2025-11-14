@@ -1,26 +1,34 @@
 package vista;
 
-import modelo.Logueo;
-import modelo.Registrar;
-
 import javax.swing.*;
 import java.awt.*;
 import java.time.*;
 
+import controlador.IControladorNavegacion;
+import controlador.IControladorAgendamiento;
+
 public class CalendarioVista {
 
+    private final String usuario;
+    private final String contrasena;
+    private final String rol;
+
     private JFrame frame;
-    private final Registrar registroUsuarios;
-    private final Logueo logueo;
+    private final IControladorAgendamiento agendador;
+    private IControladorNavegacion navegador;
     private JPanel panelCalendario;
     private JLabel labelMesAnio;
     private JButton botonAnterior, botonSiguiente, botonVolver;
     private YearMonth mesActual;
 
-    public CalendarioVista(String usuario, Registrar registroUsuarios, Logueo logueo, String rol, String contrasena) {
+    public CalendarioVista(String usuario, String contrasena, String rol, IControladorNavegacion navegador, IControladorAgendamiento agendador) {
 
-        this.registroUsuarios = registroUsuarios;
-        this.logueo = logueo;
+        this.navegador = navegador;
+        this.agendador = agendador;
+
+        this.usuario = usuario;
+        this.contrasena = contrasena;
+        this.rol = rol;
 
 
 
@@ -130,12 +138,11 @@ public class CalendarioVista {
 
     private void btnVolver(String rol, String usuario, String contrasena) {
         botonVolver.addActionListener(e -> {
+            navegador.cerrarVentanaActual(this.frame);
             if (rol.equals("Jefe")){
-                VentanaJefe ventanaJefe = new VentanaJefe(usuario, registroUsuarios, logueo, contrasena);
-                ventanaJefe.mostrar();
+                navegador.navegarAVentanaJefe(this.usuario, this.contrasena);
             } else {
-                VentanaTrabajador ventanaTrabajador = new VentanaTrabajador(registroUsuarios, logueo, usuario, contrasena);
-                ventanaTrabajador.mostrar();
+                navegador.navegarAVentanaTrabajador(this.usuario, this.contrasena);
             }
             this.frame.dispose();
         });

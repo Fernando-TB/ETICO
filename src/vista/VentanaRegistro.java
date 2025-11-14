@@ -1,21 +1,21 @@
 package vista;
 
-import modelo.Registrar;
-import modelo.Logueo;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Objects;
 
+import controlador.IControladorAutenticacion;
+import controlador.IControladorNavegacion;
+
 
 public class VentanaRegistro {
 
 
-    private final Logueo logueo;
+
     private final JFrame frame;
-    private final Registrar registroUsuarios;
+
     private JTextField campoCorreo;
     private JPasswordField campoContrasena;
     private JPasswordField campoConfirmar;
@@ -23,11 +23,14 @@ public class VentanaRegistro {
     private JButton botonVolver;
     private JButton botonRegistrar;
 
-    public VentanaRegistro(Registrar registroUsuarios, Logueo logueo) {
+    private final IControladorAutenticacion autenticador;
+    private final IControladorNavegacion navegador;
 
-        this.logueo = logueo;
 
-        this.registroUsuarios = registroUsuarios;
+    public VentanaRegistro(IControladorAutenticacion autenticador, IControladorNavegacion navegador) {
+
+        this.autenticador = autenticador;
+        this.navegador = navegador;
 
 
         this.frame = new JFrame("Registro - ETICO");
@@ -99,7 +102,6 @@ public class VentanaRegistro {
 
 
 
-        //Comprobar que la contraseña confirmada sea igual
         if (Objects.equals(contrasena, confirmar)) {
             System.out.println("Registrando Usuario");
         } else {
@@ -107,7 +109,7 @@ public class VentanaRegistro {
             JOptionPane.showMessageDialog(frame, "Los campos de contraseñas no coinciden");
         }
 
-        if (registroUsuarios.guardarUsuario(correo, contrasena, rol)) {
+        if (autenticador.registrarNuevoUsuario(correo, contrasena, rol)) {
             JOptionPane.showMessageDialog(frame, "Usuario registrado con éxito. Vuelva al Login.", "Registro Exitoso", JOptionPane.INFORMATION_MESSAGE);
 
             campoCorreo.setText("");
@@ -128,10 +130,8 @@ public class VentanaRegistro {
     }
 
     private void irALogin() {
-        this.ocultar();
-        SwingUtilities.invokeLater(() -> {
-            new VentanaLogin(registroUsuarios, logueo).mostrar();
-        });
+        navegador.cerrarVentanaActual(this.frame);
+        navegador.navegarALogin();
     }
 
     public void ocultar() {
