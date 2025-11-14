@@ -1,0 +1,7 @@
+Interfaces:
+
+tienen un contrato en este caso "Si una clase quiere ser un controlador de navegación, debe tener el método navegarALogin() y navegarAVentanaJefe()"
+
+tienen métodos abstractos, solo define que hace el método, como se llama, que parámetros recibe, NO el como lo hace (cuerpo)
+
+se define usando interface en lugar de class
