@@ -16,10 +16,17 @@ public class GestorAplicacion implements IControladorAgendamiento, IControladorA
         logica.agendarReunion(trabajadores, titulo, duracion);
     }
 
-    public GestorAplicacion(Registrar registroUsuarios, Logueo logueo, Logica logica) {
-        this.registroUsuarios = registroUsuarios;
-        this.logueo = logueo;
-        this.logica = logica;
+    public GestorAplicacion() {
+        this.registroUsuarios = new Registrar();
+        this.logueo = new Logueo(this.registroUsuarios);
+
+        APIEscribirCalendar apiEscribirCalendar = new APIEscribirCalendar();
+        APIGemini apiGemini = new APIGemini();
+        APILeerCalendar apiLeerCalendar = new APILeerCalendar();
+        ManejadorConsola manejadorConsola = new ManejadorConsola();
+
+
+        this.logica = new Logica(apiLeerCalendar, apiGemini, apiEscribirCalendar, manejadorConsola);
     }
 
     public String intentarLogin(String correo, String contrasena) {

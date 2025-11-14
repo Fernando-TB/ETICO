@@ -76,6 +76,7 @@ public class VentanaTrabajador {
 
         botonVerHorario.addActionListener(e -> {
 
+            navegador.cerrarVentanaActual(this.frame);
             navegador.navegarACalendarioVista(usuario, contrasena, rol);
         });
 
