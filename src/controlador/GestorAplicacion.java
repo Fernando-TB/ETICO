@@ -18,6 +18,8 @@ public class GestorAplicacion implements IControladorAgendamiento, IControladorA
     private final Logueo logueo;
     private final Logica logica;
 
+    private final Map<String, Map<Integer, String>> citasSimuladasPorUsuario;
+
 
     public void solicitarAgendarReunion(List<String> trabajadores, String titulo, int duracion) {
         logica.agendarReunion(trabajadores, titulo, duracion);
@@ -25,33 +27,55 @@ public class GestorAplicacion implements IControladorAgendamiento, IControladorA
 
     public Map<LocalDate, String> obtenerCitasParaMes(YearMonth mes, String usuario) {
 
-        Map<LocalDate, String> citas = new HashMap<>();
+        Map<LocalDate, String> citasDelMes = new HashMap<>();
 
-        try{
-            if (mes.lengthOfMonth() >= 6){
-                citas.put(mes.atDay(6), "Reunión de Equipo, 10:00 - 11:00");
-            }
-            if (mes.lengthOfMonth() >= 15){
-                citas.put(mes.atDay(15), "Terminar código, 14:00");
-            }
-        } catch (DateTimeException e) {
+        Map<Integer, String> citasDelUsuario = citasSimuladasPorUsuario.get(usuario);
 
+        if (citasDelUsuario != null) {
+
+            for (Map.Entry<Integer, String> entry : citasDelUsuario.entrySet()) {
+
+                int diaDelMes = entry.getKey();
+                String descripcion = entry.getValue();
+
+                try {
+                    if (mes.lengthOfMonth() >= diaDelMes) {
+                        citasDelMes.put(mes.atDay(diaDelMes), descripcion);
+                    }
+                } catch (DateTimeException e) {
+                    System.err.println("Error al obtener la fecha para el día: " + diaDelMes);
+                }
+            }
         }
-        return citas;
+        return citasDelMes;
     }
+
+
 
     public GestorAplicacion() {
-        this.registroUsuarios = new Registrar();
-        this.logueo = new Logueo(this.registroUsuarios);
+            this.registroUsuarios = new Registrar();
+            this.logueo = new Logueo(this.registroUsuarios);
 
-        APIEscribirCalendar apiEscribirCalendar = new APIEscribirCalendar();
-        APIGemini apiGemini = new APIGemini();
-        APILeerCalendar apiLeerCalendar = new APILeerCalendar();
-        ManejadorConsola manejadorConsola = new ManejadorConsola();
+            APIEscribirCalendar apiEscribirCalendar = new APIEscribirCalendar();
+            APIGemini apiGemini = new APIGemini();
+            APILeerCalendar apiLeerCalendar = new APILeerCalendar();
+            ManejadorConsola manejadorConsola = new ManejadorConsola();
+            this.logica = new Logica(apiLeerCalendar, apiGemini, apiEscribirCalendar, manejadorConsola);
+
+            citasSimuladasPorUsuario = new HashMap<>();
+
+            Map<Integer, String> citasJefe = new HashMap<>();
+            citasJefe.put(6, "Reunión de Equipo, 10:00 - 11:00");
+            citasJefe.put(20, "Preparar Presupuesto, 09:00 - 12:00");
+            citasSimuladasPorUsuario.put("jefe@jefe.com", citasJefe);
 
 
-        this.logica = new Logica(apiLeerCalendar, apiGemini, apiEscribirCalendar, manejadorConsola);
-    }
+            Map<Integer, String> citasTrabajador = new HashMap<>();
+            citasTrabajador.put(15, "Terminar código, 14:00 - 16:00");
+            citasSimuladasPorUsuario.put("trabajador@trabajador.com", citasTrabajador);
+
+        }
+
 
     public String intentarLogin(String correo, String contrasena) {
         return logueo.obtenerRol(correo, contrasena);
