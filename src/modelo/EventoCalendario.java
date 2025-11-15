@@ -1,3 +1,5 @@
+package modelo;
+
 public class EventoCalendario {
 
     private String horaInicio;

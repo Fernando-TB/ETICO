@@ -1,3 +1,5 @@
+package modelo;
+
 public class ConversorCSV {
 
     private String arhcivoCSV;

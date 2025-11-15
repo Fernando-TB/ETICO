@@ -1,4 +1,5 @@
-import java.util.ArrayList;
+package modelo;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -45,7 +46,6 @@ public class Trabajador {
             return false;
         }
     }
-
 
 
 
