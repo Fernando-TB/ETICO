@@ -107,9 +107,9 @@ public class VentanaLogin {
         if (rol != null) {
 
             if  (rol.equals("Trabajador")) {
-                navegador.navegarAVentanaTrabajador(usuario, contrasena);
+                navegador.navegarAVentanaTrabajador(usuario, contrasena, rol, frame);
             }else if  (rol.equals("Jefe")) {
-                navegador.navegarAVentanaJefe(usuario, contrasena);
+                navegador.navegarAVentanaJefe(usuario, contrasena, rol, frame);
             }
 
         } else {

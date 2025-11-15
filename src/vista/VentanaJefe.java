@@ -16,12 +16,14 @@ public class VentanaJefe {
 
     private final IControladorNavegacion navegador;
     private final IControladorAgendamiento agendador;
+    private final String contrasena;
 
 
-    public VentanaJefe(String usuario, IControladorNavegacion navegador, IControladorAgendamiento agendador) {
+    public VentanaJefe(IControladorNavegacion navegador, IControladorAutenticacion autenticador, String usuario, String contrasena, IControladorAgendamiento agendador) {
 
         this.navegador = navegador;
         this.agendador = agendador;
+        this.contrasena = contrasena;
 
         this.frame = new JFrame("Ventana de Jefe - ETICO");
 
@@ -76,7 +78,7 @@ public class VentanaJefe {
         });
 
         botonVerHorario.addActionListener(e -> {
-            navegador.navegarACalendarioVista(usuario, null, rol);
+            navegador.navegarACalendarioVista(usuario, this.contrasena, rol, this.frame);
             navegador.cerrarVentanaActual(this.frame);
         });
 

@@ -1,19 +1,43 @@
 package controlador;
 
+import java.time.DateTimeException;
 import java.util.List;
 import modelo.*;
 import vista.*;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.util.HashMap;
+import java.util.Map;
+import modelo.Registrar;
 
-public class GestorAplicacion implements IControladorAgendamiento, IControladorAutenticacion, IControladorNavegacion {
+public class GestorAplicacion implements IControladorAgendamiento, IControladorAutenticacion, IControladorNavegacion, IControladorCitas {
 
     private final Registrar registroUsuarios;
     private final Logueo logueo;
     private final Logica logica;
 
+
     public void solicitarAgendarReunion(List<String> trabajadores, String titulo, int duracion) {
         logica.agendarReunion(trabajadores, titulo, duracion);
+    }
+
+    public Map<LocalDate, String> obtenerCitasParaMes(YearMonth mes, String usuario) {
+
+        Map<LocalDate, String> citas = new HashMap<>();
+
+        try{
+            if (mes.lengthOfMonth() >= 6){
+                citas.put(mes.atDay(6), "Reunión de Equipo, 10:00 - 11:00");
+            }
+            if (mes.lengthOfMonth() >= 15){
+                citas.put(mes.atDay(15), "Terminar código, 14:00");
+            }
+        } catch (DateTimeException e) {
+
+        }
+        return citas;
     }
 
     public GestorAplicacion() {
@@ -45,18 +69,30 @@ public class GestorAplicacion implements IControladorAgendamiento, IControladorA
         SwingUtilities.invokeLater(() -> new VentanaRegistro(this, this).mostrar());
     }
 
-    public void navegarAVentanaJefe(String usuario, String contrasena) {
-        SwingUtilities.invokeLater(() -> new VentanaJefe(usuario, this, this).mostrar());
+    public void navegarACalendarioVista(String usuario, String contrasena, String rol, JFrame ventanaActual) {
+
+        cerrarVentanaActual(ventanaActual);
+
+        CalendarioVista calendario = new CalendarioVista(usuario, contrasena, rol, this, this, this);
+        calendario.mostrar();
     }
 
-    public void navegarAVentanaTrabajador(String usuario, String contrasena) {
+    public void navegarAVentanaJefe(String usuario, String contrasena, String rol, JFrame ventanaActual) {
+        cerrarVentanaActual(ventanaActual);
+        SwingUtilities.invokeLater(() -> {
+            new VentanaJefe(this, this, usuario, contrasena, this).mostrar();
+        });
 
-        SwingUtilities.invokeLater(() -> new VentanaTrabajador(this, this, usuario, contrasena).mostrar());
+
     }
 
-    public void navegarACalendarioVista(String usuario, String contrasena, String rol) {
+    public void navegarAVentanaTrabajador(String usuario, String contrasena, String rol, JFrame ventanaActual) {
+        cerrarVentanaActual(ventanaActual);
+        SwingUtilities.invokeLater(() -> {
+            new VentanaTrabajador(this, this, usuario, contrasena).mostrar();
+        });
 
-        SwingUtilities.invokeLater(() -> new CalendarioVista(usuario, contrasena, rol, this, this).mostrar());
+
     }
 
     public void cerrarVentanaActual(JFrame frameActual) {
