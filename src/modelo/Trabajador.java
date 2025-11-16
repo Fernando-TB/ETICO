@@ -10,9 +10,9 @@ public class Trabajador {
     private String correo;
     private String contraseña;
     private String rol;
-    private List<EventoCalendario> calendario;
+    private Calendario calendario;
 
-    public Trabajador(int edad, String nombre, String correo,String contraseña, String rol, List<EventoCalendario> calendario) {
+    public Trabajador(int edad, String nombre, String correo,String contraseña, String rol, Calendario calendario) {
 
        this.edad = edad;
        this.nombre = nombre;
@@ -35,7 +35,7 @@ public class Trabajador {
         return rol;
     }
 
-    public List<EventoCalendario> getCalendario(){
+    public Calendario getCalendario(){
         return calendario;
     }
 
