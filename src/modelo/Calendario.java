@@ -75,4 +75,25 @@ public class Calendario {
         return eventoCombinado;
 
     }
+
+    public List<EventoCalendario> getLunes() {
+        return lunes;
+    }
+
+    public List<EventoCalendario> getMartes() {
+        return martes;
+    }
+
+    public List<EventoCalendario> getMiercoles() {
+        return miercoles;
+    }
+
+    public List<EventoCalendario> getJueves() {
+        return jueves;
+    }
+
+    public List<EventoCalendario> getViernes() {
+        return viernes;
+    }
+
 }
