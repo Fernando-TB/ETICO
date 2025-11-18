@@ -8,15 +8,16 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
-public class ConversorCSV {
+public class ConversorTXT {
 
     /**
-     * Guarda la lista de eventos en un archivo de texto con formato CSV.
+     * Guarda la lista de eventos en un archivo de texto con un formato simplificado.
      * Incluye solo Título, Hora Inicio y Hora Fin.
      * @param eventos La lista de eventos de Google Calendar.
      * @param fileName El nombre del archivo de salida (ej: "eventos_Gonzalo_Fuentes.txt").
      */
-    public void guardarEventosEnCSV(List<Event> eventos, String fileName) {
+    // ¡Método renombrado de 'guardarEventosEnCSV' a 'guardarEventosEnTXT'!
+    public void guardarEventosEnTXT(List<Event> eventos, String fileName) {
         if (eventos == null || eventos.isEmpty()) {
             System.out.printf("Advertencia: La lista de eventos para %s está vacía. No se creará el archivo.\n", fileName);
             return;
