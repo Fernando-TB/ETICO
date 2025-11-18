@@ -11,7 +11,7 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.calendar.Calendar;
-import com.google.api.services.calendar.CalendarScopes;
+import com.google.api.services.calendar.CalendarScopes; // Importación necesaria
 
 import java.io.File;
 import java.io.IOException;
@@ -20,16 +20,16 @@ import java.io.InputStreamReader;
 import java.security.GeneralSecurityException;
 import java.util.Collections;
 import java.util.List;
-
+import java.util.Arrays; // Necesario si usas Arrays.asList
 
 public class PedirPermisosCalendar {
 
     private static final String APPLICATION_NAME = "ETICO - Google Calendar Connector";
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
-    // La carpeta base es 'tokens'. Se agregará un subdirectorio por cada usuario.
     private static final java.io.File BASE_DATA_STORE_DIR = new java.io.File("tokens");
 
-    private static final List<String> SCOPES = Collections.singletonList(CalendarScopes.CALENDAR_EVENTS);
+    // ¡SCOPES ACTUALIZADOS! Usamos CalendarScopes.CALENDAR para permisos completos (lectura/escritura/freebusy).
+    private static final List<String> SCOPES = Collections.singletonList(CalendarScopes.CALENDAR);
 
 
     /**
@@ -41,7 +41,6 @@ public class PedirPermisosCalendar {
 
         System.out.println("--- Autenticando usuario: " + userId + " ---");
 
-        // Autoriza al usuario, guardando su token en una carpeta con su nombre.
         Credential credential = authorize(httpTransport, userId);
 
         System.out.println("Autenticación exitosa para " + userId + ". Construyendo cliente de la API.");
@@ -53,8 +52,7 @@ public class PedirPermisosCalendar {
 
 
     /**
-     * Realiza el proceso de autorización de OAuth para un usuario,
-     * almacenando su token en un directorio específico.
+     * Realiza el proceso de autorización de OAuth para un usuario.
      */
     private static Credential authorize(HttpTransport httpTransport, String userId) throws IOException {
         InputStream in = PedirPermisosCalendar.class.getResourceAsStream("/credentials.json");
@@ -63,16 +61,14 @@ public class PedirPermisosCalendar {
         }
         GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
 
-        // Crea una carpeta de almacenamiento de tokens única para cada usuario
         File userDataStoreDir = new File(BASE_DATA_STORE_DIR, userId);
 
         GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
-                httpTransport, JSON_FACTORY, clientSecrets, SCOPES)
-                .setDataStoreFactory(new FileDataStoreFactory(userDataStoreDir)) // Usa el directorio específico
+                httpTransport, JSON_FACTORY, clientSecrets, SCOPES) // SCOPES ACTUALIZADOS AQUÍ
+                .setDataStoreFactory(new FileDataStoreFactory(userDataStoreDir))
                 .setAccessType("offline")
                 .build();
 
-        // Usa un 'user' genérico como clave, ya que el almacenamiento ya está segmentado por la carpeta del userId.
         LocalServerReceiver receiver = new LocalServerReceiver.Builder().setPort(8888).build();
         return new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
     }

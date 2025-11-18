@@ -6,27 +6,26 @@ import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.EventDateTime;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.Collections;
 import java.util.TimeZone;
 import java.util.List;
 import java.util.ArrayList;
 
 public class APIEscribirCalendar {
 
-    private static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm";
-    private static final SimpleDateFormat FULL_DATE_FORMAT = new SimpleDateFormat(DATE_TIME_FORMAT);
+    // Eliminamos SimpleDateFormat ya que usaremos DateTime nativo.
 
     public void createEventFromFile(Calendar service, String filePath) throws IOException, ParseException {
         System.out.println("\n Creacion oblitaria del evento.");
 
         List<String> eventData = readEventDataFromFile(filePath);
 
-        if (eventData.size() < 3) {
-            System.err.println("Error de archivo: El archivo debe contener al menos 3 líneas (Título, Inicio, Fin) en el formato correcto.");
+        if (eventData.isEmpty() || eventData.size() < 3) {
+            System.err.println("Advertencia: No hay datos válidos para crear el evento en el archivo: " + filePath);
             return;
         }
 
@@ -39,14 +38,19 @@ public class APIEscribirCalendar {
         System.out.println("- Inicio: " + startDateTimeStr);
         System.out.println("- Fin:    " + endDateTimeStr);
 
+        // ¡LLAMADA AL MÉTODO CORREGIDO!
         createEvent(service, summary, startDateTimeStr, endDateTimeStr);
     }
 
-    private void createEvent(Calendar service, String summary, String startDateTimeStr, String endDateTimeStr) throws IOException, ParseException {
-        Date startDate = FULL_DATE_FORMAT.parse(startDateTimeStr);
-        Date endDate = FULL_DATE_FORMAT.parse(endDateTimeStr);
+    // Método Modificado: Ya no usa SimpleDateFormat ni Date
+    private void createEvent(Calendar service, String summary, String startDateTimeStr, String endDateTimeStr) throws IOException {
 
-        if (endDate.before(startDate)) {
+        // 1. Convertir la cadena RFC 3339 directamente a objeto DateTime de Google API
+        DateTime start = new DateTime(startDateTimeStr);
+        DateTime end = new DateTime(endDateTimeStr);
+
+        // 2. Comprobación de orden (opcional, pero buena práctica)
+        if (end.getValue() < start.getValue()) {
             System.err.println("Error: La hora de fin es anterior a la hora de inicio. No se creará el evento.");
             return;
         }
@@ -54,10 +58,8 @@ public class APIEscribirCalendar {
         Event event = new Event().setSummary(summary);
         String timeZoneId = TimeZone.getDefault().getID();
 
-        DateTime start = new DateTime(startDate);
+        // 3. Establecer el inicio y fin del evento usando los objetos DateTime
         event.setStart(new EventDateTime().setDateTime(start).setTimeZone(timeZoneId));
-
-        DateTime end = new DateTime(endDate);
         event.setEnd(new EventDateTime().setDateTime(end).setTimeZone(timeZoneId));
 
         System.out.println("\nCreando el evento.");
@@ -73,12 +75,21 @@ public class APIEscribirCalendar {
     private List<String> readEventDataFromFile(String filePath) throws IOException {
         List<String> lines = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+
+            reader.readLine(); // Ignorar la cabecera
+
             String line;
-            while ((line = reader.readLine()) != null && lines.size() < 3) {
-                if (!line.trim().isEmpty()) {
-                    lines.add(line.trim());
+            if ((line = reader.readLine()) != null) {
+                String[] parts = line.split("\\|");
+                if (parts.length >= 3) {
+                    lines.add(parts[0].trim()); // Título
+                    lines.add(parts[1].trim()); // Inicio (RFC3339)
+                    lines.add(parts[2].trim()); // Fin (RFC3339)
                 }
             }
+        } catch (FileNotFoundException e) {
+            System.err.println("ADVERTENCIA: Archivo de datos de evento '" + filePath + "' no encontrado. Saltando la creación del evento.");
+            return Collections.emptyList();
         }
         return lines;
     }

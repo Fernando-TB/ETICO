@@ -16,7 +16,6 @@ public class ConversorTXT {
      * @param eventos La lista de eventos de Google Calendar.
      * @param fileName El nombre del archivo de salida (ej: "eventos_Gonzalo_Fuentes.txt").
      */
-    // ¡Método renombrado de 'guardarEventosEnCSV' a 'guardarEventosEnTXT'!
     public void guardarEventosEnTXT(List<Event> eventos, String fileName) {
         if (eventos == null || eventos.isEmpty()) {
             System.out.printf("Advertencia: La lista de eventos para %s está vacía. No se creará el archivo.\n", fileName);
