@@ -1,6 +1,7 @@
 package controlador;
 
 import java.time.DateTimeException;
+import java.util.ArrayList;
 import java.util.List;
 import modelo.*;
 import vista.*;
@@ -11,6 +12,7 @@ import java.time.YearMonth;
 import java.util.HashMap;
 import java.util.Map;
 import modelo.Registrar;
+import controlador.ConversorCSV;
 
 public class GestorAplicacion implements IControladorAgendamiento, IControladorAutenticacion, IControladorNavegacion, IControladorCitas {
 
@@ -18,39 +20,22 @@ public class GestorAplicacion implements IControladorAgendamiento, IControladorA
     private final Logueo logueo;
     private final Logica logica;
 
-    private final Map<String, Map<Integer, String>> citasSimuladasPorUsuario;
 
-
-    public void solicitarAgendarReunion(List<String> trabajadores, String titulo, int duracion) {
-        logica.agendarReunion(trabajadores, titulo, duracion);
+    public void agendarCita(String emailUsuario, String fecha, String horaInicio, String horaFin, String titulo) {
+        logica.agendarCita(emailUsuario, fecha, horaInicio, horaFin, titulo);
     }
 
     public Map<LocalDate, String> obtenerCitasParaMes(YearMonth mes, String usuario) {
 
-        Map<LocalDate, String> citasDelMes = new HashMap<>();
-
-        Map<Integer, String> citasDelUsuario = citasSimuladasPorUsuario.get(usuario);
-
-        if (citasDelUsuario != null) {
-
-            for (Map.Entry<Integer, String> entry : citasDelUsuario.entrySet()) {
-
-                int diaDelMes = entry.getKey();
-                String descripcion = entry.getValue();
-
-                try {
-                    if (mes.lengthOfMonth() >= diaDelMes) {
-                        citasDelMes.put(mes.atDay(diaDelMes), descripcion);
-                    }
-                } catch (DateTimeException e) {
-                    System.err.println("Error al obtener la fecha para el día: " + diaDelMes);
-                }
-            }
-        }
-        return citasDelMes;
+        return new HashMap<>();
     }
 
-
+    public void navegarAAgendarReunion(String usuario, String contrasena, String rol, JFrame ventanaActual) {
+        cerrarVentanaActual(ventanaActual);
+        SwingUtilities.invokeLater(() -> {
+            new CalendarioAgendar(this, this, usuario, contrasena, rol).mostrar();
+        });
+    }
 
     public GestorAplicacion() {
             this.registroUsuarios = new Registrar();
@@ -60,22 +45,10 @@ public class GestorAplicacion implements IControladorAgendamiento, IControladorA
             APIGemini apiGemini = new APIGemini();
             APILeerCalendar apiLeerCalendar = new APILeerCalendar();
             ManejadorConsola manejadorConsola = new ManejadorConsola();
-            this.logica = new Logica(apiLeerCalendar, apiGemini, apiEscribirCalendar, manejadorConsola);
 
-            citasSimuladasPorUsuario = new HashMap<>();
-
-            Map<Integer, String> citasJefe = new HashMap<>();
-            citasJefe.put(6, "Reunión de Equipo, 10:00 - 11:00");
-            citasJefe.put(20, "Preparar Presupuesto, 09:00 - 12:00");
-            citasSimuladasPorUsuario.put("jefe@jefe.com", citasJefe);
-
-
-            Map<Integer, String> citasTrabajador = new HashMap<>();
-            citasTrabajador.put(15, "Terminar código, 14:00 - 16:00");
-            citasSimuladasPorUsuario.put("trabajador@trabajador.com", citasTrabajador);
-
+            ConversorCSV conversorCSV = new ConversorCSV();
+            this.logica = new Logica(apiLeerCalendar, apiGemini, apiEscribirCalendar, manejadorConsola, conversorCSV);
         }
-
 
     public String intentarLogin(String correo, String contrasena) {
         return logueo.obtenerRol(correo, contrasena);

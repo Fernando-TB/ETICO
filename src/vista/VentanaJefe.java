@@ -83,7 +83,8 @@ public class VentanaJefe {
         });
 
         botonReunionObligatoria.addActionListener(e -> {
-            JOptionPane.showMessageDialog(frame, "Funcionalidad 'Reunión Obligatoria' no implementada.");
+            navegador.cerrarVentanaActual(this.frame);
+            navegador.navegarAAgendarReunion(usuario, this.contrasena, rol, this.frame);
         });
 
 

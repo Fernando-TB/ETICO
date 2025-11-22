@@ -184,6 +184,8 @@ public class CalendarioVista {
 
                 panelDia.add(panelContenido, BorderLayout.CENTER);
                 panelDia.setToolTipText(cita);
+
+                panelDia.setToolTipText("<html>" + cita.replace("<br>", "<br>") + "</html>");
             }
 
             if (fecha.equals(hoy)) {

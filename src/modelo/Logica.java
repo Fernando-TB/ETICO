@@ -1,10 +1,12 @@
 package modelo;
 
 import controlador.ManejadorConsola;
+import controlador.ConversorCSV;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 
 public class Logica {
 
@@ -12,54 +14,41 @@ public class Logica {
     private final APIGemini apiGemini;
     private final APIEscribirCalendar apiEscribirCalendar;
     private final ManejadorConsola manejadorConsola;
+    private final ConversorCSV conversorCSV;
 
-    public Logica(APILeerCalendar apiLeerCalendar, APIGemini apiGemini, APIEscribirCalendar apiEscribirCalendar, ManejadorConsola manejadorConsola) {
+    public Logica(APILeerCalendar apiLeerCalendar, APIGemini apiGemini, APIEscribirCalendar apiEscribirCalendar, ManejadorConsola manejadorConsola, ConversorCSV conversorCSV) {
 
         this.apiLeerCalendar = apiLeerCalendar;
         this.apiGemini = apiGemini;
         this.apiEscribirCalendar = apiEscribirCalendar;
         this.manejadorConsola = manejadorConsola;
+        this.conversorCSV = new ConversorCSV();
 
     }
 
-    public void agendarReunion(List<String> trabajadores, String titulo, int duracion) {
+    public void agendarCita(String emailUsuario, String fecha, String horaInicio, String horaFin, String titulo) {
 
-        manejadorConsola.imprimirMensaje("\n--- Iniciando el proceso para agendar la reunion: '" + titulo + "' ---");
+        manejadorConsola.imprimirMensaje("\n--- Iniciando agendamiento de cita simple para: '" + emailUsuario + "' ---");
         try {
-            Map<String, Map<String, List<String>>> horariosDeTodos = new HashMap<>();
-            for(String trabajador : trabajadores) {                          //Metodo obtenerHorariosOcupados probable cambio por metodo hecho por el conector de APIS
-                Map<String, List<String>> horariosOcupados = apiLeerCalendar.obtenerHorariosOcupados(trabajador);
-                horariosDeTodos.put(trabajador, horariosOcupados);
-            }
-            manejadorConsola.imprimirMensaje("--> Horarios ocupados de todos los participantes recopilados");
 
-            String promptParaGemini = crearPromptParaGemini(horariosDeTodos, duracion);
+            String horarioCompleto = fecha + "T" + horaInicio + ":00-" + horaFin + ":00";
 
-                                        //Clase de apiGemini debe tener metodo que se llame analizarYEncontrarHorario
-            String horarioSugerido = apiGemini.analizarYEncontrarHorario(promptParaGemini);
-            manejadorConsola.imprimirMensaje("--> La IA ha sugerido el siguiente horario: " + horarioSugerido);
 
-            for (String trabajador : trabajadores) {
-                apiEscribirCalendar.crearEvento(trabajador, titulo, horarioSugerido);
-            }
-            manejadorConsola.imprimirMensaje("\n--- Reunion agendada con exito para todos los participantes. ---");
+            apiEscribirCalendar.crearEvento(emailUsuario, titulo, horarioCompleto);
 
+
+            int duracionPlaceholder = 60;
+            Cita nuevaCita = new Cita(titulo, horarioCompleto, duracionPlaceholder, List.of(emailUsuario));
+            conversorCSV.guardarNuevaCita(nuevaCita);
+
+            manejadorConsola.imprimirMensaje("\n--- Cita agendada con exito para " + emailUsuario + ". Detalles: " + titulo + " en " + horarioCompleto + " y guardada en CSV. ---");
         } catch (Exception e) {
-            manejadorConsola.imprimirMensaje("Error Ocurrio un problema al agendar la reunion: " + e.getMessage());
+            manejadorConsola.imprimirMensaje("Error Ocurrio un problema al agendar la cita: " + e.getMessage());
         }
-
-    }
-    private String crearPromptParaGemini(Map<String, Map<String, List<String>>> horarios, int duracion) {
-
-        StringBuilder sb = new StringBuilder();
-        sb.append("Analiza los siguientes horarios ocupados para un grupo de personas. ");
-        sb.append("Necesito encontrar un bloque de tiempo libre de ").append(duracion).append(" minutos que sirva para todos.");
-        sb.append("Responde SOLO con el horario de inicio y fin en formato ISO 8601 (YYYY-MM-DDTHH:MM:SS-HH:MM:SS), sin texto adicional. ");
-        sb.append("Ten en cuenta que los horarios validos pueden ser desde las 06:00:00 hasta las 23:00:00");
-        sb.append("Datos de horarios:\n").append(horarios.toString());
-        return sb.toString();
-
-
     }
 
-    }
+}
+
+
+
+
