@@ -19,6 +19,7 @@ public class GestorAplicacion implements IControladorAgendamiento, IControladorA
     private final Registrar registroUsuarios;
     private final Logueo logueo;
     private final Logica logica;
+    private final ConversorCSV conversorCSV;
 
 
     public void agendarCita(String emailUsuario, String fecha, String horaInicio, String horaFin, String titulo) {
@@ -27,7 +28,51 @@ public class GestorAplicacion implements IControladorAgendamiento, IControladorA
 
     public Map<LocalDate, String> obtenerCitasParaMes(YearMonth mes, String usuario) {
 
-        return new HashMap<>();
+        Map<LocalDate, String> citasDelMes = new HashMap<>();
+
+        List<Cita> todasLasCitas = conversorCSV.cargarCitas();
+
+        for (Cita cita : todasLasCitas) {
+
+
+            if (cita.getTrabajadores().contains(usuario.trim())) {
+
+                String horarioStr = cita.getHorario();
+
+                try {
+
+                    String[] partes = horarioStr.split("T");
+                    LocalDate fechaCita = LocalDate.parse(partes[0]);
+
+
+                    if (fechaCita.getYear() == mes.getYear() && fechaCita.getMonth() == mes.getMonth()) {
+
+
+                        String tiempoStr = horarioStr.substring(partes[0].length() + 1);
+
+
+                        String horaInicio = tiempoStr.substring(0, 5);
+                        String horaFin = tiempoStr.substring(tiempoStr.indexOf("-") + 1, tiempoStr.indexOf("-") + 6);
+
+                        String descripcion = cita.getTitulo() + ", " + horaInicio + " - " + horaFin;
+
+
+                        LocalDate dia = fechaCita;
+                        String citasAnteriores = citasDelMes.getOrDefault(dia, "");
+
+                        if (!citasAnteriores.isEmpty()) {
+                            citasAnteriores += "<br>";
+                        }
+                        citasDelMes.put(dia, citasAnteriores + descripcion);
+                    }
+
+                } catch (Exception e) {
+                    System.err.println("Error procesando cita desde CSV: " + cita.getTitulo() + " - " + e.getMessage());
+                }
+            }
+        }
+        return citasDelMes;
+
     }
 
     public void navegarAAgendarReunion(String usuario, String contrasena, String rol, JFrame ventanaActual) {
@@ -46,7 +91,7 @@ public class GestorAplicacion implements IControladorAgendamiento, IControladorA
             APILeerCalendar apiLeerCalendar = new APILeerCalendar();
             ManejadorConsola manejadorConsola = new ManejadorConsola();
 
-            ConversorCSV conversorCSV = new ConversorCSV();
+            this.conversorCSV = new ConversorCSV();
             this.logica = new Logica(apiLeerCalendar, apiGemini, apiEscribirCalendar, manejadorConsola, conversorCSV);
         }
 
