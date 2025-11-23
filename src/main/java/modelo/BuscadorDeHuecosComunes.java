@@ -4,23 +4,22 @@ import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.model.FreeBusyResponse;
 import com.google.api.services.calendar.model.TimePeriod;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class BuscadorDeHuecosComunes {
 
     /**
-     * Calcula los bloques de tiempo en los que TODOS los calendarios están libres.
-     * Si un hueco es más largo que la duración mínima, lo recorta a la duración exacta (2 horas).
+     * Calcula los bloques de tiempo en los que TODOS los calendarios están libres,
+     * limitando la búsqueda a Lunes-Viernes, 6 AM a 11 PM.
      * @param response La respuesta FreeBusyResponse con los tiempos ocupados de todos.
-     * @param durationMinutos La duración mínima/exacta que debe tener el hueco libre (120 minutos).
-     * @return Una lista de TimePeriod que representan los tiempos libres comunes.
+     * @param durationMinutos La duración exacta de la reunión (60 minutos).
+     * @return Una lista de TimePeriod que representan los tiempos libres comunes que cumplen la restricción.
      */
     public List<TimePeriod> encontrarHuecosLibres(FreeBusyResponse response, int durationMinutos) {
 
-        // 1. Recolectar TODOS los tiempos ocupados
+        // ... (Pasos 1 a 3: Recolección y Fusión de Ocupados) ...
+
         List<TimePeriod> todosLosOcupados = new ArrayList<>();
         var calendars = response.getCalendars();
 
@@ -34,41 +33,106 @@ public class BuscadorDeHuecosComunes {
             }
         }
 
-        // Si nadie está ocupado en el rango, todo el rango es libre (caso límite)
+        long duracionMinMillis = (long) durationMinutos * 60 * 1000;
+
+        // Manejo de caso límite si no hay eventos ocupados
         if (todosLosOcupados.isEmpty()) {
-            return List.of(new TimePeriod().setStart(response.getTimeMin()).setEnd(response.getTimeMax()));
+            DateTime start = response.getTimeMin();
+            long endMillis = start.getValue() + duracionMinMillis;
+            DateTime end = new DateTime(endMillis);
+            return List.of(new TimePeriod().setStart(start).setEnd(end));
         }
 
-        // 2. Simplificar y fusionar los bloques de tiempo ocupado
         List<TimePeriod> bloquesOcupadosFusionados = fusionarIntervalosOcupados(todosLosOcupados);
-
-        // 3. Determinar los bloques LIBRES (el complemento)
         List<TimePeriod> huecosLibres = calcularComplemento(bloquesOcupadosFusionados, response.getTimeMin(), response.getTimeMax());
 
-        // 4. Filtrar por duración mínima y CORTAR al tamaño de la reunión (2 horas)
-        long duracionMinMillis = (long) durationMinutos * 60 * 1000;
-        long duracionMaximaMillis = duracionMinMillis; // 2 horas exactas
+        // 4. APLICAR FILTRO DE DÍA Y HORA (Automático)
+        long duracionMaximaMillis = duracionMinMillis;
 
-        List<TimePeriod> huecosValidos = huecosLibres.stream()
-                // Filtrar huecos que duren al menos 2 horas
-                .filter(period -> (period.getEnd().getValue() - period.getStart().getValue()) >= duracionMinMillis)
-                .map(period -> {
-                    // Cortar el hueco a un máximo de 2 horas desde el inicio
-                    long nuevoFinMillis = period.getStart().getValue() + duracionMaximaMillis;
+        List<TimePeriod> huecosValidos = new ArrayList<>();
 
-                    if (nuevoFinMillis < period.getEnd().getValue()) {
-                        // Si es más largo, ajustamos el fin para que dure solo 2 horas
-                        return period.setEnd(new DateTime(nuevoFinMillis));
+        for (TimePeriod periodo : huecosLibres) {
+
+            // 4a. Definir el rango de búsqueda diario (Lunes 6:00 AM a Viernes 11:00 PM)
+            TimePeriod periodoCortado = cortarPeriodoPorHorarioLaboral(periodo);
+
+            if (periodoCortado != null) {
+                long duracionActual = periodoCortado.getEnd().getValue() - periodoCortado.getStart().getValue();
+
+                // 4b. Aplicar el filtro de duración (60 minutos) y cortar
+                if (duracionActual >= duracionMinMillis) {
+
+                    long nuevoFinMillis = periodoCortado.getStart().getValue() + duracionMaximaMillis;
+
+                    // Asegurar que no excedemos el final del periodo cortado
+                    if (nuevoFinMillis > periodoCortado.getEnd().getValue()) {
+                        nuevoFinMillis = periodoCortado.getEnd().getValue();
                     }
-                    // Si es de 2 horas o menos, lo dejamos como está
-                    return period;
-                })
-                .collect(Collectors.toList());
+
+                    // Crear el hueco final con el inicio original y el nuevo fin de 60 minutos
+                    TimePeriod huecoFinal = new TimePeriod()
+                            .setStart(periodoCortado.getStart())
+                            .setEnd(new DateTime(nuevoFinMillis));
+
+                    huecosValidos.add(huecoFinal);
+                }
+            }
+        }
 
         return huecosValidos;
     }
 
-    // --- Métodos de Algoritmo de Intervalos (Se mantienen iguales) ---
+
+    /**
+     * Aplica la restricción de Lunes-Viernes, 6 AM - 11 PM a un TimePeriod dado.
+     * Si el periodo se extiende más allá del horario laboral, lo corta.
+     */
+    private TimePeriod cortarPeriodoPorHorarioLaboral(TimePeriod periodo) {
+
+        // Usamos el calendario de Java para analizar días de la semana y horas locales
+        Calendar calStart = Calendar.getInstance();
+        calStart.setTimeInMillis(periodo.getStart().getValue());
+
+        Calendar calEnd = Calendar.getInstance();
+        calEnd.setTimeInMillis(periodo.getEnd().getValue());
+
+        int dayOfWeekStart = calStart.get(Calendar.DAY_OF_WEEK);
+
+        // Lunes (2) a Viernes (6)
+        if (dayOfWeekStart < Calendar.MONDAY || dayOfWeekStart > Calendar.FRIDAY) {
+            return null; // Ignorar fines de semana
+        }
+
+        // 1. Establecer hora de inicio mínima (6:00 AM)
+        if (calStart.get(Calendar.HOUR_OF_DAY) < 6) {
+            calStart.set(Calendar.HOUR_OF_DAY, 6);
+            calStart.set(Calendar.MINUTE, 0);
+            calStart.set(Calendar.SECOND, 0);
+        }
+
+        // 2. Establecer hora de fin máxima (11:00 PM / 23:00)
+        Calendar limiteFin = (Calendar) calEnd.clone();
+        limiteFin.set(Calendar.HOUR_OF_DAY, 23);
+        limiteFin.set(Calendar.MINUTE, 0);
+        limiteFin.set(Calendar.SECOND, 0);
+
+        // Cortar el final si se extiende más allá de las 11 PM del día actual.
+        if (calEnd.after(limiteFin)) {
+            calEnd = limiteFin;
+        }
+
+        // Si el periodo final es válido (final es posterior o igual al inicio, después del ajuste)
+        if (calEnd.before(calStart) || calEnd.equals(calStart)) {
+            return null;
+        }
+
+        // Devolver el periodo de tiempo cortado
+        return new TimePeriod()
+                .setStart(new DateTime(calStart.getTimeInMillis()))
+                .setEnd(new DateTime(calEnd.getTimeInMillis()));
+    }
+
+    // --- fusionarIntervalosOcupados y calcularComplemento se mantienen iguales ---
 
     private List<TimePeriod> fusionarIntervalosOcupados(List<TimePeriod> ocupados) {
         if (ocupados.isEmpty()) return Collections.emptyList();
