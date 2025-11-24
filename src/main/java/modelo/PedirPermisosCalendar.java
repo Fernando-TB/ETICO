@@ -11,7 +11,7 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.calendar.Calendar;
-import com.google.api.services.calendar.CalendarScopes; // Importación necesaria
+import com.google.api.services.calendar.CalendarScopes;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,26 +20,21 @@ import java.io.InputStreamReader;
 import java.security.GeneralSecurityException;
 import java.util.Collections;
 import java.util.List;
-import java.util.Arrays; // Necesario si usas Arrays.asList
 
 public class PedirPermisosCalendar {
 
-    private static final String APPLICATION_NAME = "ETICO - Google Calendar Connector";
+    private static final String APPLICATION_NAME = "ETICO";
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
     private static final java.io.File BASE_DATA_STORE_DIR = new java.io.File("tokens");
 
-    // ¡SCOPES ACTUALIZADOS! Usamos CalendarScopes.CALENDAR para permisos completos (lectura/escritura/freebusy).
     private static final List<String> SCOPES = Collections.singletonList(CalendarScopes.CALENDAR);
 
 
-    /**
-     * Obtiene el servicio de Calendar para un usuario específico.
-     * @param userId El identificador único del usuario (usado para almacenar el token).
-     */
+
     public static Calendar getCalendarService(String userId) throws IOException, GeneralSecurityException {
         HttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
 
-        System.out.println("--- Autenticando usuario: " + userId + " ---");
+        System.out.println("Autenticando usuario: " + userId + " ---");
 
         Credential credential = authorize(httpTransport, userId);
 
@@ -51,9 +46,6 @@ public class PedirPermisosCalendar {
     }
 
 
-    /**
-     * Realiza el proceso de autorización de OAuth para un usuario.
-     */
     private static Credential authorize(HttpTransport httpTransport, String userId) throws IOException {
         InputStream in = PedirPermisosCalendar.class.getResourceAsStream("/credentials.json");
         if (in == null) {
