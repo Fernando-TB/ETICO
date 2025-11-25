@@ -86,13 +86,10 @@ public class GestorAplicacion implements IControladorAgendamiento, IControladorA
             this.registroUsuarios = new Registrar();
             this.logueo = new Logueo(this.registroUsuarios);
 
-            APIEscribirCalendar apiEscribirCalendar = new APIEscribirCalendar();
-            APIGemini apiGemini = new APIGemini();
-            APILeerCalendar apiLeerCalendar = new APILeerCalendar();
             ManejadorConsola manejadorConsola = new ManejadorConsola();
 
             this.conversorCSV = new ConversorCSV();
-            this.logica = new Logica(apiLeerCalendar, apiGemini, apiEscribirCalendar, manejadorConsola, conversorCSV);
+            this.logica = new Logica(manejadorConsola, conversorCSV);
         }
 
     public String intentarLogin(String correo, String contrasena) {

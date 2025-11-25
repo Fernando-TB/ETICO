@@ -89,14 +89,13 @@ public class VentanaLogin {
             String usuario = campoUsuario.getText();
             String password = new String(campoContrasena.getPassword());
             verificarLogin(usuario, password);
-            navegador.cerrarVentanaActual(this.frame);
+
         });
 
         botonRegistro.addActionListener(e -> {
             this.ocultar();
             SwingUtilities.invokeLater(() -> {
                 navegador.navegarARegistro();
-                navegador.cerrarVentanaActual(this.frame);
             });
         });
     }
@@ -108,8 +107,10 @@ public class VentanaLogin {
 
             if  (rol.equals("Trabajador")) {
                 navegador.navegarAVentanaTrabajador(usuario, contrasena, rol, frame);
+                navegador.cerrarVentanaActual(this.frame);
             }else if  (rol.equals("Jefe")) {
                 navegador.navegarAVentanaJefe(usuario, contrasena, rol, frame);
+                navegador.cerrarVentanaActual(this.frame);
             }
 
         } else {

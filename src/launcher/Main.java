@@ -1,11 +1,8 @@
 package launcher;
 
-import controlador.ManejadorConsola;
+import controlador.*;
 import modelo.*;
 import vista.VentanaLogin;
-import controlador.GestorAplicacion;
-import controlador.IControladorAutenticacion;
-import controlador.IControladorNavegacion;
 
 import javax.swing.*;
 import java.util.List;

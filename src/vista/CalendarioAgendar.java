@@ -23,6 +23,7 @@ public class CalendarioAgendar {
     private JTextField campoFecha;
     private JTextField campoHoraInicio;
     private JTextField campoHoraFin;
+    private JTextField campoCorreo;
 
     private JButton botonAgendar;
     private JButton botonVolver;
@@ -59,17 +60,24 @@ public class CalendarioAgendar {
         panelPrincipal.add(campoFecha, gbc);
 
 
-        gbc.gridx = 0; gbc.gridy = 2;
+        gbc.gridx = 0; gbc.gridy = 3;
         panelPrincipal.add(new JLabel("Hora Inicio (HH:MM):"), gbc);
-        gbc.gridx = 1; gbc.gridy = 2;
+        gbc.gridx = 1; gbc.gridy = 3;
         campoHoraInicio = new JTextField("10:00", 20);
         panelPrincipal.add(campoHoraInicio, gbc);
 
-        gbc.gridx = 0; gbc.gridy = 3;
+        gbc.gridx = 0; gbc.gridy = 4;
         panelPrincipal.add(new JLabel("Hora Fin (HH:MM):"), gbc);
-        gbc.gridx = 1; gbc.gridy = 3;
+        gbc.gridx = 1; gbc.gridy = 4;
         campoHoraFin = new JTextField("11:00", 20);
         panelPrincipal.add(campoHoraFin, gbc);
+
+        campoCorreo = new JTextField(20);
+
+        gbc.gridx = 0; gbc.gridy = 2;
+        panelPrincipal.add(new JLabel("Correo:"), gbc);
+        gbc.gridx = 1; gbc.gridy = 2;
+        panelPrincipal.add(campoCorreo, gbc);
 
         JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
         botonVolver = new JButton("Volver");
@@ -98,6 +106,7 @@ public class CalendarioAgendar {
             String fechaStr = campoFecha.getText().trim();
             String horaInicioStr = campoHoraInicio.getText().trim();
             String horaFinStr = campoHoraFin.getText().trim();
+            String correoStr = campoCorreo.getText().trim();
 
 
             if (titulo.isEmpty() || fechaStr.isEmpty() || horaInicioStr.isEmpty() || horaFinStr.isEmpty()) {
@@ -118,7 +127,7 @@ public class CalendarioAgendar {
                 return;
             }
 
-            agendador.agendarCita(usuarioJefe, fechaStr, horaInicioStr, horaFinStr, titulo);
+            agendador.agendarCita(correoStr, fechaStr, horaInicioStr, horaFinStr, titulo);
 
             JOptionPane.showMessageDialog(frame, "Cita agendada con éxito para " + usuarioJefe + ".\nRevise la consola para más detalles.", "Agendamiento Exitoso", JOptionPane.INFORMATION_MESSAGE);
 

@@ -10,19 +10,17 @@ import java.util.HashMap;
 
 public class Logica {
 
-    private final APILeerCalendar apiLeerCalendar;
-    private final APIGemini apiGemini;
+
     private final APIEscribirCalendar apiEscribirCalendar;
     private final ManejadorConsola manejadorConsola;
     private final ConversorCSV conversorCSV;
 
-    public Logica(APILeerCalendar apiLeerCalendar, APIGemini apiGemini, APIEscribirCalendar apiEscribirCalendar, ManejadorConsola manejadorConsola, ConversorCSV conversorCSV) {
+    public Logica(ManejadorConsola manejadorConsola, ConversorCSV conversorCSV) {
 
-        this.apiLeerCalendar = apiLeerCalendar;
-        this.apiGemini = apiGemini;
-        this.apiEscribirCalendar = apiEscribirCalendar;
+
         this.manejadorConsola = manejadorConsola;
         this.conversorCSV = new ConversorCSV();
+        this.apiEscribirCalendar = new APIEscribirCalendar();
 
     }
 
@@ -37,8 +35,7 @@ public class Logica {
             apiEscribirCalendar.crearEvento(emailUsuario, titulo, horarioCompleto);
 
 
-            int duracionPlaceholder = 60;
-            Cita nuevaCita = new Cita(titulo, horarioCompleto, duracionPlaceholder, List.of(emailUsuario));
+            Cita nuevaCita = new Cita(titulo, horarioCompleto, List.of(emailUsuario));
             conversorCSV.guardarNuevaCita(nuevaCita);
 
             manejadorConsola.imprimirMensaje("\n--- Cita agendada con exito para " + emailUsuario + ". Detalles: " + titulo + " en " + horarioCompleto + " y guardada en CSV. ---");
