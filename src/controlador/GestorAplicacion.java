@@ -26,44 +26,31 @@ public class GestorAplicacion implements IControladorAgendamiento, IControladorA
         logica.agendarCita(emailUsuario, fecha, horaInicio, horaFin, titulo);
     }
 
-    public Map<LocalDate, String> obtenerCitasParaMes(YearMonth mes, String usuario) {
-
-        Map<LocalDate, String> citasDelMes = new HashMap<>();
+    public Map<LocalDate, String> obtenerCitasEntreFechas(LocalDate inicio, LocalDate fin, String usuario) {
+        Map<LocalDate, String> citasSemana = new HashMap<>();
 
         List<Cita> todasLasCitas = conversorCSV.cargarCitas();
 
         for (Cita cita : todasLasCitas) {
 
-
             if (cita.getTrabajadores().contains(usuario.trim())) {
 
-                String horarioStr = cita.getHorario();
-
                 try {
-
-                    String[] partes = horarioStr.split("T");
+                    String[] partes = cita.getHorario().split("T");
                     LocalDate fechaCita = LocalDate.parse(partes[0]);
 
+                    if (!fechaCita.isBefore(inicio) && !fechaCita.isAfter(fin)) {
 
-                    if (fechaCita.getYear() == mes.getYear() && fechaCita.getMonth() == mes.getMonth()) {
-
-
-                        String tiempoStr = horarioStr.substring(partes[0].length() + 1);
-
-
+                        String tiempoStr = partes[1];
                         String horaInicio = tiempoStr.substring(0, 5);
                         String horaFin = tiempoStr.substring(tiempoStr.indexOf("-") + 1, tiempoStr.indexOf("-") + 6);
 
                         String descripcion = cita.getTitulo() + ", " + horaInicio + " - " + horaFin;
 
+                        String citasPrevias = citasSemana.getOrDefault(fechaCita, "");
+                        if (!citasPrevias.isEmpty()) citasPrevias += "<br>";
 
-                        LocalDate dia = fechaCita;
-                        String citasAnteriores = citasDelMes.getOrDefault(dia, "");
-
-                        if (!citasAnteriores.isEmpty()) {
-                            citasAnteriores += "<br>";
-                        }
-                        citasDelMes.put(dia, citasAnteriores + descripcion);
+                        citasSemana.put(fechaCita, citasPrevias + descripcion);
                     }
 
                 } catch (Exception e) {
@@ -71,8 +58,8 @@ public class GestorAplicacion implements IControladorAgendamiento, IControladorA
                 }
             }
         }
-        return citasDelMes;
 
+        return citasSemana;
     }
 
     public void navegarAAgendarReunion(String usuario, String contrasena, String rol, JFrame ventanaActual) {

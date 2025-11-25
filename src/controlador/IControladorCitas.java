@@ -7,7 +7,8 @@ import java.util.Map;
 
 public interface IControladorCitas {
 
-    Map<LocalDate, String> obtenerCitasParaMes(YearMonth mes, String usuario);
+    Map<LocalDate, String> obtenerCitasEntreFechas(LocalDate inicio, LocalDate fin, String usuario);
+
 
 
 }

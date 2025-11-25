@@ -40,6 +40,15 @@ public class CalendarioAgendar {
         frame.setLocationRelativeTo(null);
         frame.setLayout(new BorderLayout(10, 10));
 
+        //ICONO
+        try {
+            ImageIcon Logo = new ImageIcon(getClass().getResource("/LOGO.png"));
+            frame.setIconImage(Logo.getImage());
+
+        } catch (Exception e) {
+            System.err.println("Error al abrir el LOGO");
+        }
+
 
         JPanel panelPrincipal = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();

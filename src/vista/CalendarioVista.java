@@ -4,6 +4,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.time.*;
 import java.util.Map;
+import java.time.format.TextStyle;
+import java.util.Locale;
+
 
 import controlador.IControladorNavegacion;
 import controlador.IControladorAgendamiento;
@@ -22,21 +25,16 @@ public class CalendarioVista {
     private IControladorNavegacion navegador;
     private JPanel panelCalendario;
     private JLabel labelMesAnio;
-    private JButton botonAnterior, botonSiguiente, botonVolver;
-    private YearMonth mesActual;
+    private JButton botonVolver;
+    private LocalDate semanaActual;
     private final IControladorCitas controladorCitas;
 
     public CalendarioVista(String usuario, String contrasena, String rol, IControladorNavegacion navegador, IControladorAgendamiento agendador, IControladorCitas controladorCitas) {
 
+        this.semanaActual = LocalDate.now();
         this.navegador = navegador;
         this.agendador = agendador;
         this.controladorCitas = controladorCitas;
-
-        this.mesActual = YearMonth.now();
-
-        LocalDate diaDePrueba = mesActual.atDay(mesActual.atDay(1).getDayOfMonth() + 5);
-        citasDePrueba.put(diaDePrueba, "Reunión de Equipo, 10:00 - 11:00");
-        citasDePrueba.put(mesActual.atDay(15), "Terminar codigo, 14:00");
 
 
 
@@ -48,7 +46,7 @@ public class CalendarioVista {
 
         frame = new JFrame("Calendario de Citas");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setSize(600, 480);
+        frame.setSize(1000, 480);
         frame.setLocationRelativeTo(null);
         frame.setLayout(new BorderLayout(10, 10));
 
@@ -64,16 +62,14 @@ public class CalendarioVista {
 
 
         JPanel panelNavegacion = new JPanel(new BorderLayout());
-        botonAnterior = new JButton("<");
-        botonSiguiente = new JButton(">");
+
         labelMesAnio = new JLabel("", SwingConstants.CENTER);
         labelMesAnio.setFont(new Font("Arial", Font.BOLD, 18));
 
-        panelNavegacion.add(botonAnterior, BorderLayout.WEST);
         panelNavegacion.add(labelMesAnio, BorderLayout.CENTER);
-        panelNavegacion.add(botonSiguiente, BorderLayout.EAST);
 
-        panelCalendario = new JPanel(new GridLayout(0, 7));
+
+        panelCalendario = new JPanel(new GridLayout(0, 1));
         panelCalendario.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         JPanel panelContenido = new JPanel();
@@ -81,7 +77,13 @@ public class CalendarioVista {
 
         panelContenido.add(crearPanelDiasSemana());
 
-        panelContenido.add(panelCalendario);
+        JPanel contenedorCentro = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        contenedorCentro.add(panelCalendario);
+
+        panelCalendario.setPreferredSize(new Dimension(1000, 200));
+
+        panelContenido.add(contenedorCentro);
+
 
         JPanel panelPrincipal = new JPanel(new BorderLayout());
 
@@ -101,14 +103,6 @@ public class CalendarioVista {
         panelInferior.add(botonVolver);
         frame.add(panelInferior, BorderLayout.SOUTH);
 
-        botonAnterior.addActionListener(e -> {
-            mesActual = mesActual.minusMonths(1);
-            actualizarCalendario();
-        });
-        botonSiguiente.addActionListener(e -> {
-            mesActual = mesActual.plusMonths(1);
-            actualizarCalendario();
-        });
 
         actualizarCalendario();
         frame.setVisible(true);
@@ -116,77 +110,62 @@ public class CalendarioVista {
     }
 
     private JPanel crearPanelDiasSemana() {
-        JPanel panel = new JPanel(new GridLayout(1, 7)); // 1 fila, 7 columnas
-        String[] dias = {"Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"};
-
-        for (String dia : dias) {
-            JLabel label = new JLabel(dia, SwingConstants.CENTER);
-            label.setFont(label.getFont().deriveFont(Font.BOLD));
-            panel.add(label);
-        }
+        JPanel panel = new JPanel(new GridLayout(1, 7));
         return panel;
     }
 
     private void actualizarCalendario() {
 
-        labelMesAnio.setText(mesActual.getMonth().name() + " " + mesActual.getYear());
+
+        LocalDate lunes = semanaActual.with(DayOfWeek.MONDAY);
+        LocalDate domingo = lunes.plusDays(6);
+
+        labelMesAnio.setText("Semana actual");
 
         panelCalendario.removeAll();
-        panelCalendario.setLayout(new GridLayout(0, 7, 5, 5));
-
-        Map<LocalDate, String> citasDelMes = controladorCitas.obtenerCitasParaMes(mesActual, usuario);
+        panelCalendario.setLayout(new GridLayout(1, 7, 5, 5));
 
 
-        int diaInicio = mesActual.atDay(1).getDayOfWeek().getValue();
+        Map<LocalDate, String> citasSemana = controladorCitas.obtenerCitasEntreFechas(lunes, domingo, usuario);
 
-
-        int espacios = diaInicio % 7;
-
-        if (diaInicio == 7) {
-            espacios = 0;
-        }
-
-
-        for (int i = 0; i < espacios; i++) {
-            panelCalendario.add(new JLabel(""));
-        }
-
-        int diasEnMes = mesActual.lengthOfMonth();
         LocalDate hoy = LocalDate.now();
 
-
-        for (int dia = 1; dia <= diasEnMes; dia++) {
-            LocalDate fecha = mesActual.atDay(dia);
-
+        for (int i = 0; i < 7; i++) {
+            LocalDate fecha = lunes.plusDays(i);
 
             JPanel panelDia = new JPanel(new BorderLayout());
             panelDia.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
             panelDia.setBackground(Color.WHITE);
 
+            String nombreDia = fecha.getDayOfWeek()
+                    .getDisplayName(TextStyle.SHORT, new Locale("es", "ES"));
+            nombreDia = nombreDia.substring(0, 1).toUpperCase() + nombreDia.substring(1);
 
-            JLabel labelDia = new JLabel(String.valueOf(dia), SwingConstants.CENTER);
-            labelDia.setFont(labelDia.getFont().deriveFont(Font.BOLD, 10f));
+            JLabel labelDia = new JLabel(
+                    nombreDia + " " + fecha.getDayOfMonth(),
+                    SwingConstants.CENTER
+            );
+            labelDia.setFont(labelDia.getFont().deriveFont(Font.BOLD, 12f));
             panelDia.add(labelDia, BorderLayout.NORTH);
 
-
-            if (citasDelMes.containsKey(fecha)) {
-                String cita = citasDelMes.get(fecha);
-
+            if (citasSemana.containsKey(fecha)) {
+                String cita = citasSemana.get(fecha);
 
                 JPanel panelContenido = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 2));
                 panelContenido.setBackground(Color.WHITE);
 
                 JLabel labelCita = new JLabel("<html><center>" + cita + "</center></html>", SwingConstants.CENTER);
-                labelCita.setFont(labelCita.getFont().deriveFont(9f));
+                labelCita.setFont(labelCita.getFont().deriveFont(10f));
                 labelCita.setForeground(new Color(0, 102, 102));
 
                 panelContenido.add(labelCita);
-
                 panelDia.add(panelContenido, BorderLayout.CENTER);
-                panelDia.setToolTipText(cita);
 
-                panelDia.setToolTipText("<html>" + cita.replace("<br>", "<br>") + "</html>");
+                panelDia.setToolTipText("<html><p style='width:150px;'>" + cita + "</p></html>");
+            }else {
+                panelDia.setToolTipText("Sin citas");
             }
+
 
             if (fecha.equals(hoy)) {
                 panelDia.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
