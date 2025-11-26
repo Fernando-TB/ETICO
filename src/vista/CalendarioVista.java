@@ -117,6 +117,8 @@ public class CalendarioVista {
     private void actualizarCalendario() {
 
 
+
+
         LocalDate lunes = semanaActual.with(DayOfWeek.MONDAY);
         LocalDate domingo = lunes.plusDays(6);
 
@@ -133,6 +135,8 @@ public class CalendarioVista {
         for (int i = 0; i < 7; i++) {
             LocalDate fecha = lunes.plusDays(i);
 
+
+
             JPanel panelDia = new JPanel(new BorderLayout());
             panelDia.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
             panelDia.setBackground(Color.WHITE);
@@ -147,6 +151,10 @@ public class CalendarioVista {
             );
             labelDia.setFont(labelDia.getFont().deriveFont(Font.BOLD, 12f));
             panelDia.add(labelDia, BorderLayout.NORTH);
+
+            if (fecha.getDayOfWeek() == DayOfWeek.SUNDAY) {
+                panelDia.setBackground(new Color(255, 150, 150));
+            }
 
             if (citasSemana.containsKey(fecha)) {
                 String cita = citasSemana.get(fecha);
@@ -164,6 +172,10 @@ public class CalendarioVista {
                 panelDia.setToolTipText("<html><p style='width:150px;'>" + cita + "</p></html>");
             }else {
                 panelDia.setToolTipText("Sin citas");
+            }
+
+            if (fecha.getDayOfWeek() == DayOfWeek.SUNDAY) {
+                panelDia.setToolTipText("Día no laboral");
             }
 
 
