@@ -18,6 +18,8 @@ public class CalendarioVista {
     private final String contrasena;
     private final String rol;
 
+    private final LocalDate semanaBase = LocalDate.now();
+
     private final java.util.Map<LocalDate, String> citasDePrueba = new java.util.HashMap<>();
 
     private JFrame frame;
@@ -66,6 +68,22 @@ public class CalendarioVista {
         labelMesAnio = new JLabel("", SwingConstants.CENTER);
         labelMesAnio.setFont(new Font("Arial", Font.BOLD, 18));
 
+        JButton btnSemanaActual = new JButton("Semana actual");
+        btnSemanaActual.setEnabled(false);
+        JButton btnSemanaSiguiente = new JButton("Semana siguiente");
+
+
+
+        btnSemanaActual.setFocusPainted(false);
+        btnSemanaSiguiente.setFocusPainted(false);
+
+        JPanel panelBotonesSemana = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 5));
+
+        panelBotonesSemana.add(btnSemanaActual);
+        panelBotonesSemana.add(btnSemanaSiguiente);
+
+        panelNavegacion.add(panelBotonesSemana, BorderLayout.SOUTH);
+
         panelNavegacion.add(labelMesAnio, BorderLayout.CENTER);
 
 
@@ -107,6 +125,22 @@ public class CalendarioVista {
         actualizarCalendario();
         frame.setVisible(true);
         btnVolver(rol, usuario, contrasena);
+
+        btnSemanaSiguiente.addActionListener(e -> {
+            if (semanaActual.isBefore(semanaBase.plusWeeks(1))) {
+                semanaActual = semanaActual.plusWeeks(1);
+                actualizarCalendario();
+                btnSemanaActual.setEnabled(true);
+                btnSemanaSiguiente.setEnabled(false);
+            }
+        });
+
+        btnSemanaActual.addActionListener(e -> {
+            semanaActual = semanaBase;
+            actualizarCalendario();
+            btnSemanaSiguiente.setEnabled(true);
+            btnSemanaActual.setEnabled(false);
+        });
     }
 
     private JPanel crearPanelDiasSemana() {
