@@ -15,13 +15,11 @@ public class Logueo {
 
         Map<String, Map<String, String>> baseDeDatos = registroUsuarios.getBaseDeDatos();
 
-
         String correoLimpio = correo.trim();
         String contrasenaLimpia = contrasena.trim();
 
         if (baseDeDatos.containsKey(correoLimpio)) {
             Map<String, String> datos = baseDeDatos.get(correoLimpio);
-
 
             if (datos.get("contrasena").equals(contrasenaLimpia)) {
                 System.out.println("Logueo: Login exitoso para " + correoLimpio);

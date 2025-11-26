@@ -8,8 +8,8 @@ public class Jefe extends Trabajador{
 
     private List<Trabajador> equipo;
 
-    public Jefe(int edad, String nombre, String correo,String contra, String rol, Calendario calendario, List<Trabajador> equipo) {
-        super(edad, nombre, correo, contra, rol, calendario);
+    public Jefe(String nombre, String correo,String contra, String rol, Calendario calendario, List<Trabajador> equipo) {
+        super(nombre, correo, contra, rol, calendario);
 
         this.equipo = equipo;
     }

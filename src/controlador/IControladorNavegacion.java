@@ -1,6 +1,8 @@
 
 package controlador;
 
+import modelo.Registrar;
+
 import javax.swing.*;
 
 public interface IControladorNavegacion {
@@ -11,4 +13,6 @@ public interface IControladorNavegacion {
     void navegarACalendarioVista(String usuario, String contrasena, String rol, javax.swing.JFrame ventanaActual);
     void navegarAAgendarReunion(String usuario, String contrasena, String rol, JFrame ventanaActual);
     void cerrarVentanaActual(javax.swing.JFrame frameActual);
+    void navegarAAgregarEquipo(String correo, String contrasena, String rol, JFrame ventanaActual);
+    void navegarAIniciarEvento(String usuario, String contrasena, String rol, JFrame ventanaActual);
 }

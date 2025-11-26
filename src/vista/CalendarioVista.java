@@ -40,13 +40,9 @@ public class CalendarioVista {
         this.agendador = agendador;
         this.controladorCitas = controladorCitas;
 
-
-
         this.usuario = usuario;
         this.contrasena = contrasena;
         this.rol = rol;
-
-
 
         frame = new JFrame("Calendario de Citas");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -170,8 +166,6 @@ public class CalendarioVista {
 
         for (int i = 0; i < 7; i++) {
             LocalDate fecha = lunes.plusDays(i);
-
-
 
             JPanel panelDia = new JPanel(new BorderLayout());
             panelDia.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));

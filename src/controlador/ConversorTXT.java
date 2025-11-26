@@ -22,8 +22,6 @@ public class ConversorTXT {
             System.out.printf("Iniciando escritura de %d eventos en el archivo: %s\n",
                     eventos.size(), fileName);
 
-            printWriter.println("Titulo | Hora Inicio | Hora Fin");
-
             for (Event evento : eventos) {
                 String linea = formatEventLine(evento);
                 printWriter.println(linea);

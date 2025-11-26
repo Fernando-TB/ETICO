@@ -4,19 +4,17 @@ import java.util.Objects;
 
 public class Trabajador {
 
-    private int edad;
     private String nombre;
     private String correo;
-    private String contraseña;
+    private String contra;
     private String rol;
     private Calendario calendario;
 
-    public Trabajador(int edad, String nombre, String correo,String contraseña, String rol, Calendario calendario) {
+    public Trabajador(String nombre, String correo,String contra, String rol, Calendario calendario) {
 
-        this.edad = edad;
         this.nombre = nombre;
         this.correo = correo;
-        this.contraseña = contraseña;
+        this.contra = contra;
         this.rol = rol;
         this.calendario = calendario;
 
@@ -39,13 +37,11 @@ public class Trabajador {
     }
 
     public boolean verificarDatos(String correo, String contraseña){
-        if (Objects.equals(correo, this.correo) && Objects.equals(contraseña,this.contraseña)){
+        if (Objects.equals(correo, this.correo) && Objects.equals(contraseña,this.contra)){
             return true;
         }else {
             return false;
         }
     }
-
-
 
 }

@@ -38,7 +38,6 @@ public class Logica {
             String horarioCompleto = fecha + "T" + horaInicio + ":00-" + horaFin + ":00";
 
 
-            System.out.println("chupala");
 
 
             Cita nuevaCita = new Cita(titulo, horarioCompleto, List.of(emailUsuario));

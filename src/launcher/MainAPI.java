@@ -36,6 +36,10 @@ public class MainAPI {
             try {
                 System.out.printf("\n           INICIANDO TAREAS PARA %s          \n", trabajador);
 
+                //trabajadpr = correo user
+                // pedir permisos abre navegador para solicitar permisos para correo
+
+
                 Calendar service = PedirPermisosCalendar.getCalendarService(trabajador);
 
                 if (trabajador.equals(TRABAJADORES[0])) {
@@ -62,13 +66,20 @@ public class MainAPI {
         List<String> workerEmails = Arrays.asList(TRABAJADORES);
 
         APIConsultarDisponibilidad apiConsulta = new APIConsultarDisponibilidad();
+
+        // Crea la disponibilidad del equipo
+
         FreeBusyResponse response = apiConsulta.consultarDisponibilidad(service, workerEmails);
 
         BuscadorDeHuecosComunes buscador = new BuscadorDeHuecosComunes();
 
+        // se definen los espacios libres de los users
+        // se define el rango que debe tener el espacio libre
+
         List<TimePeriod> huecosComunes = buscador.encontrarHuecosLibres(response, 60);
 
         ConversorDisponibilidadTXT conversor = new ConversorDisponibilidadTXT();
+
         conversor.guardarDisponibilidad(huecosComunes, FREEBUSY_OUTPUT_FILE);
 
         System.out.println("Tiempos guardados en " + FREEBUSY_OUTPUT_FILE);

@@ -19,8 +19,6 @@ public class ConversorDisponibilidadTXT {
         try (FileWriter fileWriter = new FileWriter(fileName);
              PrintWriter printWriter = new PrintWriter(fileWriter)) {
 
-            printWriter.println("NOMBRE | INICIO | FIN");
-
             TimePeriod primerHueco = huecosComunes.get(0);
 
             String tituloReunion = "Reunion Equipo";
