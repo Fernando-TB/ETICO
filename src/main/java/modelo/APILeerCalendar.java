@@ -13,16 +13,32 @@ import java.time.ZonedDateTime;
 import java.time.ZoneId;
 import java.time.DayOfWeek;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.temporal.TemporalAdjusters;
+
 public class APILeerCalendar {
 
     public List<Event> obtenerProximosEventos(Calendar client) throws IOException {
         System.out.println("Descargando datos desde GoogleCalendar");
 
-        DateTime now = new DateTime(System.currentTimeMillis());
+        ZoneId zoneId = ZoneId.systemDefault();
+        LocalDate today = LocalDate.now(zoneId);
+
+        LocalDate startOfWeek = today.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+
+        LocalDate endOfNextWeek = startOfWeek.plusDays(12);
+
+        ZonedDateTime startZoned = ZonedDateTime.of(startOfWeek, LocalTime.MIN, zoneId);
+        DateTime timeMin = new DateTime(startZoned.toInstant().toEpochMilli());
+
+        ZonedDateTime endZoned = ZonedDateTime.of(endOfNextWeek, LocalTime.MAX, zoneId);
+        DateTime timeMax = new DateTime(endZoned.toInstant().toEpochMilli());
+
 
         Events events = client.events().list("primary")
-                .setMaxResults(200)
-                .setTimeMin(now)
+                .setTimeMin(timeMin)
+                .setTimeMax(timeMax)
                 .setOrderBy("startTime")
                 .setSingleEvents(true)
                 .execute();
@@ -43,17 +59,18 @@ public class APILeerCalendar {
                     }
 
                     long startTimeMillis = evento.getStart().getDateTime().getValue();
-                    ZonedDateTime startZoned = ZonedDateTime.ofInstant(
+
+                    ZonedDateTime eventZonedTime = ZonedDateTime.ofInstant(
                             java.time.Instant.ofEpochMilli(startTimeMillis), localZone);
 
-                    DayOfWeek dayOfWeek = startZoned.getDayOfWeek();
+                    DayOfWeek dayOfWeek = eventZonedTime.getDayOfWeek();
 
                     return dayOfWeek.getValue() >= DayOfWeek.MONDAY.getValue() &&
                             dayOfWeek.getValue() <= DayOfWeek.SATURDAY.getValue();
                 })
                 .collect(Collectors.toList());
 
-        System.out.printf("", eventosFiltrados.size(), listaEventos.size());
+        System.out.printf("Descargados %d eventos, %d filtrados de Lunes a Sábado.\n", listaEventos.size(), eventosFiltrados.size());
 
         return eventosFiltrados;
     }
