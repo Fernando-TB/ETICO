@@ -169,4 +169,22 @@ public class GestorAplicacion implements IControladorAgendamiento, IControladorA
 
         return resultado;
     }
+
+    public void navegarAIniciarEvento(String usuario, String contrasena, String rol, JFrame ventanaActual) {
+        cerrarVentanaActual(ventanaActual);
+
+        SwingUtilities.invokeLater(() -> {
+            new VentanaEvento(this, this, usuario, contrasena, rol);
+        });
+    }
+
+    public int convertirDuracionAMinutos(String duracion) {
+        String[] partes = duracion.split(":");
+
+        int horas = Integer.parseInt(partes[0]);
+        int minutos = Integer.parseInt(partes[1]);
+
+        return horas * 60 + minutos;
+    }
+
 }

@@ -96,12 +96,18 @@ public class VentanaJefe {
         botonAgregarEquipo.addActionListener(e -> {
             navegador.navegarAAgregarEquipo(usuario, this.contrasena, rol, this.frame);
         });
+
+        botonIniciarEvento.addActionListener(e -> {
+            navegador.cerrarVentanaActual(this.frame);
+            navegador.navegarAIniciarEvento(usuario, contrasena, rol, this.frame);
+        });
     }
 
     private void irALogin() {
         navegador.cerrarVentanaActual(this.frame);
         navegador.navegarALogin();
     }
+
 
 
     public void ocultar() {

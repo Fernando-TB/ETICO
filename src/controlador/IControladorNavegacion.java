@@ -13,4 +13,5 @@ public interface IControladorNavegacion {
     void navegarAAgendarReunion(String usuario, String contrasena, String rol, JFrame ventanaActual);
     void cerrarVentanaActual(javax.swing.JFrame frameActual);
     void navegarAAgregarEquipo(String correo, String contrasena, String rol, JFrame ventanaActual);
+    void navegarAIniciarEvento(String usuario, String contrasena, String rol, JFrame ventanaActual);
 }
