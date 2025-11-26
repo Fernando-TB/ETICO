@@ -7,11 +7,7 @@ import java.util.Objects;
 
 public class Calendario {
 
-    private List<EventoCalendario> lunes =  new ArrayList<>();
-    private List<EventoCalendario> martes = new ArrayList<>();
-    private List<EventoCalendario> miercoles = new ArrayList<>();
-    private List<EventoCalendario> jueves = new ArrayList<>();
-    private List<EventoCalendario> viernes = new ArrayList<>();
+    private List<EventoCalendario> calendario =  new ArrayList<>();
 
     public Calendario(List<EventoCalendario> eventos){
 
@@ -26,32 +22,20 @@ public class Calendario {
 
                 EventoCalendario eventoCombinado = juntarSolapadas(eventos.get(i),eventos.get(i+1));
 
-                agregarDiaCorrespondiente(eventoCombinado);
+                calendario.add(eventoCombinado);
 
                 if(i + 1 == eventos.size() - 1){
                     ultimoSolapaba = true;
                 }
 
             }else{
-                agregarDiaCorrespondiente(actual);
+                calendario.add(actual);
             }
 
         }
 
         if(!ultimoSolapaba && !eventos.isEmpty()){
-            agregarDiaCorrespondiente(eventos.getLast());
-        }
-
-    }
-
-    public void agregarDiaCorrespondiente(EventoCalendario evento){
-
-        switch (evento.getDia()){
-            case "lunes" -> lunes.add(evento);
-            case "martes" -> martes.add(evento);
-            case "miercoles" -> miercoles.add(evento);
-            case "jueves" -> jueves.add(evento);
-            case "viernes" -> viernes.add(evento);
+            calendario.add(eventos.getLast());
         }
 
     }
@@ -79,24 +63,7 @@ public class Calendario {
 
     }
 
-    public List<EventoCalendario> getLunes() {
-        return lunes;
+    public List<EventoCalendario> getCalendario() {
+        return calendario;
     }
-
-    public List<EventoCalendario> getMartes() {
-        return martes;
-    }
-
-    public List<EventoCalendario> getMiercoles() {
-        return miercoles;
-    }
-
-    public List<EventoCalendario> getJueves() {
-        return jueves;
-    }
-
-    public List<EventoCalendario> getViernes() {
-        return viernes;
-    }
-
 }

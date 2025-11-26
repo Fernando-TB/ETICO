@@ -13,7 +13,6 @@ public class BuscadorDeHuecosComunes {
 
     public List<TimePeriod> encontrarHuecosLibres(FreeBusyResponse response, int durationMinutos) {
 
-
         List<TimePeriod> todosLosOcupados = new ArrayList<>();
         var calendars = response.getCalendars();
 
@@ -69,8 +68,6 @@ public class BuscadorDeHuecosComunes {
 
         return huecosValidos;
     }
-
-
 
     private TimePeriod cortarPeriodoPorHorarioLaboral(TimePeriod periodo) {
 

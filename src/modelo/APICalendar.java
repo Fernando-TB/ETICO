@@ -1,16 +1,11 @@
-package launcher;
+package modelo;
+
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.FreeBusyResponse;
 import com.google.api.services.calendar.model.TimePeriod;
-
-import controlador.ConversorTXT;
 import controlador.ConversorDisponibilidadTXT;
-import modelo.APILeerCalendar;
-import modelo.APIEscribirCalendar;
-import modelo.PedirPermisosCalendar;
-import modelo.APIConsultarDisponibilidad;
-import modelo.BuscadorDeHuecosComunes;
+import controlador.ConversorTXT;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -18,19 +13,23 @@ import java.text.ParseException;
 import java.util.Arrays;
 import java.util.List;
 
-
-public class MainAPI {
-
-    private static final String[] TRABAJADORES = {
-            "fuentesgonzalo630@gmail.com",
-            "j.pizarro02@ufromail.cl",
-            "f.torres17@ufromail.cl"
-    };
+public class APICalendar {
 
     private static final String FREEBUSY_OUTPUT_FILE = "disponibilidad_para_reunion.txt";
 
-    public static void main(String... args) {
+    private static List<String> TRABAJADORES;
 
+    private static String nombre;
+
+    public void setTRABAJADORES(List<String> TRABAJADORES) {
+        APICalendar.TRABAJADORES = TRABAJADORES;
+    }
+
+    public void setNombreEvento(String nombreEvento) {
+        APICalendar.nombre = nombreEvento;
+    }
+
+    public void emitirEvento(int duracion){
         for (String trabajador : TRABAJADORES) {
             try {
                 System.out.printf("\n           INICIANDO TAREAS PARA %s          \n", trabajador);
@@ -40,8 +39,8 @@ public class MainAPI {
 
                 Calendar service = PedirPermisosCalendar.getCalendarService(trabajador);
 
-                if (trabajador.equals(TRABAJADORES[0])) {
-                    runFreeBusyModule(service);
+                if (trabajador.equals(TRABAJADORES.get(0))) {
+                    runFreeBusyModule(service,duracion);
                 }
 
                 runReadModule(service, trabajador);
@@ -58,23 +57,21 @@ public class MainAPI {
         System.out.println("\n PROCESO COMPLETADO PARA TODOS LOS TRABAJADORES ");
     }
 
-    private static void runFreeBusyModule(Calendar service) throws IOException {
+    private static void runFreeBusyModule(Calendar service, int duracion) throws IOException {
         System.out.println("\n Iniciando consulta de disponibilidad para todos los trabajadores");
-
-        List<String> workerEmails = Arrays.asList(TRABAJADORES);
 
         APIConsultarDisponibilidad apiConsulta = new APIConsultarDisponibilidad();
 
         // Crea la disponibilidad del equipo
 
-        FreeBusyResponse response = apiConsulta.consultarDisponibilidad(service, workerEmails);
+        FreeBusyResponse response = apiConsulta.consultarDisponibilidad(service, TRABAJADORES);
 
         BuscadorDeHuecosComunes buscador = new BuscadorDeHuecosComunes();
 
         // se definen los espacios libres de los users
         // se define el rango que debe tener el espacio libre
 
-        List<TimePeriod> huecosComunes = buscador.encontrarHuecosLibres(response, 60);
+        List<TimePeriod> huecosComunes = buscador.encontrarHuecosLibres(response,duracion);
 
         ConversorDisponibilidadTXT conversor = new ConversorDisponibilidadTXT();
 
@@ -104,4 +101,6 @@ public class MainAPI {
 
         System.out.printf("Evento de '%s' creado con éxito.\n", FREEBUSY_OUTPUT_FILE);
     }
+
+
 }

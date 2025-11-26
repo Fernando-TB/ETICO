@@ -175,7 +175,7 @@ public class GestorAplicacion implements IControladorAgendamiento, IControladorA
         cerrarVentanaActual(ventanaActual);
 
         SwingUtilities.invokeLater(() -> {
-            new VentanaEvento(this, this, usuario, contrasena, rol);
+            new VentanaEvento(this, this,this, usuario, contrasena, rol);
         });
     }
 
