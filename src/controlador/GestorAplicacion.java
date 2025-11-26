@@ -22,8 +22,8 @@ public class GestorAplicacion implements IControladorAgendamiento, IControladorA
     private final ConversorCSV conversorCSV;
 
 
-    public void agendarCita(String emailUsuario, String fecha, String horaInicio, String horaFin, String titulo) {
-        logica.agendarCita(emailUsuario, fecha, horaInicio, horaFin, titulo);
+    public boolean agendarCita(String emailUsuario, String fecha, String horaInicio, String horaFin, String titulo) {
+        return logica.agendarCita(emailUsuario, fecha, horaInicio, horaFin, titulo);
     }
 
     public Map<LocalDate, String> obtenerCitasEntreFechas(LocalDate inicio, LocalDate fin, String usuario) {

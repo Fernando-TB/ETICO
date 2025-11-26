@@ -135,12 +135,20 @@ public class CalendarioAgendar {
                 JOptionPane.showMessageDialog(frame, "El formato de hora no es válido. Use HH:MM.", "Error de Formato", JOptionPane.ERROR_MESSAGE);
                 return;
             }
+            if (agendador.agendarCita(correoStr, fechaStr, horaInicioStr, horaFinStr, titulo)){
 
-            agendador.agendarCita(correoStr, fechaStr, horaInicioStr, horaFinStr, titulo);
-
-            JOptionPane.showMessageDialog(frame, "Cita agendada con éxito para " + usuarioJefe + ".\nRevise la consola para más detalles.", "Agendamiento Exitoso", JOptionPane.INFORMATION_MESSAGE);
-
-
+                JOptionPane.showMessageDialog(
+                        frame,
+                        "Cita agendada con éxito para " + correoStr,
+                        "Agendamiento Exitoso",
+                        JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(
+                        frame,
+                        "El correo ingresado no existe en el sistema.",
+                        "Usuario no válido",
+                        JOptionPane.ERROR_MESSAGE);
+            }
             campoTitulo.setText("");
             campoHoraInicio.setText("10:00");
             campoHoraFin.setText("11:00");
