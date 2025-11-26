@@ -13,6 +13,8 @@ public class VentanaJefe {
     private JButton botonVerHorario;
     private JButton botonReunionObligatoria;
     private JButton botonVolverLogin;
+    private JButton botonAgregarEquipo;
+    private JButton botonIniciarEvento;
 
     private final IControladorNavegacion navegador;
     private final IControladorAgendamiento agendador;
@@ -38,17 +40,19 @@ public class VentanaJefe {
 
 
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setSize(300, 250);
+        frame.setSize(300, 350);
         frame.setLocationRelativeTo(null);
         frame.setLayout(new BorderLayout(10, 10));
 
         JPanel panelBotones = new JPanel();
 
-        panelBotones.setLayout(new GridLayout(2, 1, 20, 20));
+        panelBotones.setLayout(new GridLayout(4, 1, 20, 20));
         panelBotones.setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
 
         botonVerHorario = new JButton("Ver Horario");
+        botonAgregarEquipo = new JButton("Agregar personas al equipo");
         botonReunionObligatoria = new JButton("Reunión Obligatoria");
+        botonIniciarEvento = new JButton("Iniciar Evento");
 
         JPanel panelNavegacion = new JPanel(new FlowLayout(FlowLayout.CENTER));
         panelNavegacion.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
@@ -59,7 +63,9 @@ public class VentanaJefe {
 
 
         panelBotones.add(botonVerHorario);
+        panelBotones.add(botonAgregarEquipo);
         panelBotones.add(botonReunionObligatoria);
+        panelBotones.add(botonIniciarEvento);
 
         frame.add(panelBotones, BorderLayout.CENTER);
         frame.add(panelNavegacion, BorderLayout.SOUTH);
@@ -87,7 +93,9 @@ public class VentanaJefe {
             navegador.navegarAAgendarReunion(usuario, this.contrasena, rol, this.frame);
         });
 
-
+        botonAgregarEquipo.addActionListener(e -> {
+            navegador.navegarAAgregarEquipo(usuario, this.contrasena, rol, this.frame);
+        });
     }
 
     private void irALogin() {

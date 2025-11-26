@@ -63,6 +63,7 @@ public class VentanaLogin {
         botonLogin = new JButton("Iniciar Sesion");
         botonRegistro = new JButton("Registrarse");
 
+
         panelBotones.add(botonLogin);
         panelBotones.add(botonRegistro);
 

@@ -1,5 +1,9 @@
 package controlador;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.time.DateTimeException;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +18,7 @@ import java.util.Map;
 import modelo.Registrar;
 import controlador.ConversorCSV;
 
-public class GestorAplicacion implements IControladorAgendamiento, IControladorAutenticacion, IControladorNavegacion, IControladorCitas {
+public class GestorAplicacion implements IControladorAgendamiento, IControladorAutenticacion, IControladorNavegacion, IControladorCitas, IControladorEquipos {
 
     private final Registrar registroUsuarios;
     private final Logueo logueo;
@@ -121,10 +125,48 @@ public class GestorAplicacion implements IControladorAgendamiento, IControladorA
 
     }
 
+    public void navegarAAgregarEquipo(String correo, String contrasena, String rol, JFrame ventanaActual) {
+        cerrarVentanaActual(ventanaActual);
+        SwingUtilities.invokeLater(() -> {
+            new VentanaAgregarEquipo(this, registroUsuarios, correo, contrasena, rol, this).setVisible(true);
+        });
+    }
+
+    public boolean agregarPersonaAEquipo(String correoJefe, String correoIntegrante) {
+        String ruta = "Equipos.csv"; // mismo directorio del proyecto
+
+        try (FileWriter fw = new FileWriter(ruta, true)) {
+            fw.write(correoJefe + ";" + correoIntegrante + "\n");
+            return true;
+        } catch (IOException e) {
+            System.err.println("Error al guardar equipo: " + e.getMessage());
+            return false;
+        }
+    }
+
     public void cerrarVentanaActual(JFrame frameActual) {
         if (frameActual != null) {
             SwingUtilities.invokeLater(() -> frameActual.dispose());
         }
 
+    }
+
+    public List<String> obtenerEquipo(String correoJefe) {
+        List<String> resultado = new ArrayList<>();
+        String ruta = "Equipos.csv";
+
+        try (BufferedReader br = new BufferedReader(new FileReader(ruta))) {
+            String linea;
+            while ((linea = br.readLine()) != null) {
+                String[] datos = linea.split(";");
+                if (datos.length == 2 && datos[0].equalsIgnoreCase(correoJefe)) {
+                    resultado.add(datos[1]);
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Error leyendo Equipos.csv: " + e.getMessage());
+        }
+
+        return resultado;
     }
 }

@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
-
 public class ConversorCSV {
 
     private static final String RUTA_ARCHIVO = "reuniones_agendadas.csv";
