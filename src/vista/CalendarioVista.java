@@ -3,6 +3,7 @@ package vista;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 import java.time.*;
 import java.util.Map;
 import java.time.format.TextStyle;
@@ -21,8 +22,6 @@ public class CalendarioVista {
     private final String rol;
 
     private final LocalDate semanaBase = LocalDate.now();
-
-    private final java.util.Map<LocalDate, String> citasDePrueba = new java.util.HashMap<>();
 
     private JFrame frame;
     private final IControladorAgendamiento agendador;
@@ -59,8 +58,6 @@ public class CalendarioVista {
             System.err.println("Error al abrir el LOGO");
         }
 
-
-
         JPanel panelNavegacion = new JPanel(new BorderLayout());
 
         labelMesAnio = new JLabel("", SwingConstants.CENTER);
@@ -69,8 +66,6 @@ public class CalendarioVista {
         JButton btnSemanaActual = new JButton("Semana actual");
         btnSemanaActual.setEnabled(false);
         JButton btnSemanaSiguiente = new JButton("Semana siguiente");
-
-
 
         btnSemanaActual.setFocusPainted(false);
         btnSemanaSiguiente.setFocusPainted(false);
@@ -109,7 +104,6 @@ public class CalendarioVista {
 
         frame.add(panelPrincipal, BorderLayout.CENTER);
 
-
         JPanel panelInferior = new JPanel();
         panelInferior.setLayout(new FlowLayout(FlowLayout.CENTER));
         botonVolver = new JButton("Volver");
@@ -118,7 +112,6 @@ public class CalendarioVista {
         botonVolver.setFont(new Font("Arial", Font.BOLD, 13));
         panelInferior.add(botonVolver);
         frame.add(panelInferior, BorderLayout.SOUTH);
-
 
         actualizarCalendario();
         frame.setVisible(true);
@@ -148,9 +141,6 @@ public class CalendarioVista {
 
     private void actualizarCalendario() {
 
-
-
-
         LocalDate lunes = semanaActual.with(DayOfWeek.MONDAY);
         LocalDate domingo = lunes.plusDays(6);
 
@@ -160,7 +150,12 @@ public class CalendarioVista {
         panelCalendario.setLayout(new GridLayout(1, 7, 5, 5));
 
 
-        Map<LocalDate, String> citasSemana = controladorCitas.obtenerCitasEntreFechas(lunes, domingo, usuario);
+        Map<LocalDate, String> citasSemana = null;
+        try {
+            citasSemana = controladorCitas.obtenerCitasEntreFechas(lunes, domingo, usuario);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         LocalDate hoy = LocalDate.now();
 

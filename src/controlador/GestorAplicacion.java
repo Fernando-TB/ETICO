@@ -1,21 +1,17 @@
 
 package controlador;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.time.DateTimeException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+
 import modelo.*;
 import vista.*;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import java.time.LocalDate;
 import java.time.YearMonth;
-import java.util.HashMap;
-import java.util.Map;
+
 import modelo.Registrar;
 import controlador.ConversorCSV;
 
@@ -31,26 +27,29 @@ public class GestorAplicacion implements IControladorAgendamiento, IControladorA
         return logica.agendarCita(emailUsuario, fecha, horaInicio, horaFin, titulo);
     }
 
-    public Map<LocalDate, String> obtenerCitasEntreFechas(LocalDate inicio, LocalDate fin, String usuario) {
+    public Map<LocalDate, String> obtenerCitasEntreFechas(LocalDate inicio, LocalDate fin, String usuario) throws IOException {
+
         Map<LocalDate, String> citasSemana = new HashMap<>();
 
-        List<Cita> todasLasCitas = conversorCSV.cargarCitas();
+        String archivo = String.format("eventos_%s.txt", usuario);
 
-        for (Cita cita : todasLasCitas) {
+        TXTtoCalendario txttocalendario = new TXTtoCalendario();
 
-            if (cita.getTrabajadores().contains(usuario.trim())) {
+        Calendario calendario = txttocalendario.TXTaCalendario(archivo);
+
+        List<EventoCalendario> eventos = calendario.getCalendario();
+
+        for (EventoCalendario evento : eventos) {
 
                 try {
-                    String[] partes = cita.getHorario().split("T");
-                    LocalDate fechaCita = LocalDate.parse(partes[0]);
+                    LocalDate fechaCita = LocalDate.parse(evento.getDia());
 
                     if (!fechaCita.isBefore(inicio) && !fechaCita.isAfter(fin)) {
 
-                        String tiempoStr = partes[1];
-                        String horaInicio = tiempoStr.substring(0, 5);
-                        String horaFin = tiempoStr.substring(tiempoStr.indexOf("-") + 1, tiempoStr.indexOf("-") + 6);
+                        String horaInicio = evento.getHoraMinInicio();
+                        String horaFin = evento.getHoraMinFin();
 
-                        String descripcion = cita.getTitulo() + ", " + horaInicio + " - " + horaFin;
+                        String descripcion = evento.getNombreEvento() + ", " + horaInicio + " - " + horaFin;
 
                         String citasPrevias = citasSemana.getOrDefault(fechaCita, "");
                         if (!citasPrevias.isEmpty()) citasPrevias += "<br>";
@@ -59,12 +58,33 @@ public class GestorAplicacion implements IControladorAgendamiento, IControladorA
                     }
 
                 } catch (Exception e) {
-                    System.err.println("Error procesando cita desde CSV: " + cita.getTitulo() + " - " + e.getMessage());
+                    System.err.println("Error procesando cita desde CSV: " + evento.getNombreEvento() + " - " + e.getMessage());
                 }
             }
-        }
 
         return citasSemana;
+    }
+
+    private List<String> readEventDataFromFile(String filePath) throws IOException {
+        List<String> lines = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+
+            reader.readLine();
+
+            String line;
+            if ((line = reader.readLine()) != null) {
+                String[] parts = line.split("\\|");
+                if (parts.length >= 3) {
+                    lines.add(parts[0].trim());
+                    lines.add(parts[1].trim());
+                    lines.add(parts[2].trim());
+                }
+            }
+        } catch (FileNotFoundException e) {
+            System.err.println("ADVERTENCIA: Archivo de datos de evento '" + filePath + "' no encontrado. Saltando la creación del evento.");
+            return Collections.emptyList();
+        }
+        return lines;
     }
 
     public void navegarAAgendarReunion(String usuario, String contrasena, String rol, JFrame ventanaActual) {
@@ -122,7 +142,6 @@ public class GestorAplicacion implements IControladorAgendamiento, IControladorA
         SwingUtilities.invokeLater(() -> {
             new VentanaTrabajador(this, this, usuario, contrasena).mostrar();
         });
-
 
     }
 

@@ -11,7 +11,7 @@ public class TXTtoCalendario {
 
     public Calendario TXTaCalendario(String ruta) throws IOException {
 
-        List<String> lineas = Files.readAllLines(Paths.get("datos.txt"));
+        List<String> lineas = Files.readAllLines(Paths.get(ruta));
 
         List<EventoCalendario> eventos = new ArrayList<>();
 
