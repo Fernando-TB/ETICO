@@ -12,8 +12,11 @@ public class ConversorDisponibilidadTXT {
     public void guardarDisponibilidad(List<TimePeriod> huecosComunes, String fileName,String nombre) throws IOException {
 
         if (huecosComunes == null || huecosComunes.isEmpty()) {
-            System.out.println("Advertencia: No se encontraron huecos libres comunes. No se creará el archivo.");
-            return;
+            String mensajeError = "ERROR_NODISPONIBLE: No se encontró ningún hueco libre " +
+                    "de la duración requerida";
+
+            System.err.println(mensajeError);
+            throw new RuntimeException(mensajeError);
         }
 
         try (FileWriter fileWriter = new FileWriter(fileName);
@@ -30,7 +33,7 @@ public class ConversorDisponibilidadTXT {
 
             printWriter.printf("%s | %s | %s\n", tituloReunion, start, end);
 
-            System.out.printf("Escrito el primer hueco libre en el archivo: %s\n", fileName);
+            System.out.printf("[CONVERSOR] Escrito el primer hueco libre en el archivo: %s\n", fileName);
 
         } catch (IOException e) {
             System.err.println("Error al escribir el archivo de disponibilidad: " + e.getMessage());
