@@ -1,4 +1,3 @@
-
 package modelo;
 
 import com.google.api.client.util.DateTime;
@@ -6,7 +5,6 @@ import com.google.api.services.calendar.model.FreeBusyResponse;
 import com.google.api.services.calendar.model.TimePeriod;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class BuscadorDeHuecosComunes {
 
@@ -37,79 +35,89 @@ public class BuscadorDeHuecosComunes {
         }
 
         List<TimePeriod> bloquesOcupadosFusionados = fusionarIntervalosOcupados(todosLosOcupados);
+
         List<TimePeriod> huecosLibres = calcularComplemento(bloquesOcupadosFusionados, response.getTimeMin(), response.getTimeMax());
 
+        List<TimePeriod> segmentosFiltrados = new ArrayList<>();
+
+        for (TimePeriod periodoCompleto : huecosLibres) {
+            List<TimePeriod> segmentosDiarios = segmentarPeriodoPorReglaLaboral(periodoCompleto, duracionMinMillis);
+            segmentosFiltrados.addAll(segmentosDiarios);
+        }
+
         long duracionMaximaMillis = duracionMinMillis;
+        List<TimePeriod> huecosFinales = new ArrayList<>();
 
-        List<TimePeriod> huecosValidos = new ArrayList<>();
+        for (TimePeriod periodoCortado : segmentosFiltrados) {
 
-        for (TimePeriod periodo : huecosLibres) {
+            long duracionActual = periodoCortado.getEnd().getValue() - periodoCortado.getStart().getValue();
 
-            TimePeriod periodoCortado = cortarPeriodoPorHorarioLaboral(periodo);
+            if (duracionActual >= duracionMinMillis) {
 
-            if (periodoCortado != null) {
-                long duracionActual = periodoCortado.getEnd().getValue() - periodoCortado.getStart().getValue();
+                long nuevoFinMillis = periodoCortado.getStart().getValue() + duracionMaximaMillis;
 
-                if (duracionActual >= duracionMinMillis) {
-
-                    long nuevoFinMillis = periodoCortado.getStart().getValue() + duracionMaximaMillis;
-
-                    if (nuevoFinMillis > periodoCortado.getEnd().getValue()) {
-                        nuevoFinMillis = periodoCortado.getEnd().getValue();
-                    }
-
-                    TimePeriod huecoFinal = new TimePeriod()
-                            .setStart(periodoCortado.getStart())
-                            .setEnd(new DateTime(nuevoFinMillis));
-
-                    huecosValidos.add(huecoFinal);
+                if (nuevoFinMillis > periodoCortado.getEnd().getValue()) {
+                    nuevoFinMillis = periodoCortado.getEnd().getValue();
                 }
+
+                TimePeriod huecoFinal = new TimePeriod()
+                        .setStart(periodoCortado.getStart())
+                        .setEnd(new DateTime(nuevoFinMillis));
+
+                huecosFinales.add(huecoFinal);
             }
         }
 
-        return huecosValidos;
+        return huecosFinales.stream().findFirst().map(List::of).orElse(Collections.emptyList());
     }
 
 
+    private List<TimePeriod> segmentarPeriodoPorReglaLaboral(TimePeriod periodoCompleto, long duracionMinMillis) {
 
-    private TimePeriod cortarPeriodoPorHorarioLaboral(TimePeriod periodo) {
+        List<TimePeriod> segmentosValidos = new ArrayList<>();
 
-        Calendar calStart = Calendar.getInstance();
-        calStart.setTimeInMillis(periodo.getStart().getValue());
+        Calendar calIter = Calendar.getInstance();
+        calIter.setTimeInMillis(periodoCompleto.getStart().getValue());
 
-        Calendar calEnd = Calendar.getInstance();
-        calEnd.setTimeInMillis(periodo.getEnd().getValue());
+        long finCompleto = periodoCompleto.getEnd().getValue();
 
-        int dayOfWeekStart = calStart.get(Calendar.DAY_OF_WEEK);
+        while (calIter.getTimeInMillis() < finCompleto) {
 
-        if (dayOfWeekStart < Calendar.MONDAY || dayOfWeekStart > Calendar.FRIDAY) {
-            return null;
+            Calendar calDiaStart = (Calendar) calIter.clone();
+            calDiaStart.set(Calendar.HOUR_OF_DAY, 6);
+            calDiaStart.set(Calendar.MINUTE, 0);
+            calDiaStart.set(Calendar.SECOND, 0);
+            calDiaStart.set(Calendar.MILLISECOND, 0);
+
+            Calendar calDiaEnd = (Calendar) calIter.clone();
+            calDiaEnd.set(Calendar.HOUR_OF_DAY, 23);
+            calDiaEnd.set(Calendar.MINUTE, 0);
+            calDiaEnd.set(Calendar.SECOND, 0);
+            calDiaEnd.set(Calendar.MILLISECOND, 0);
+
+            int dayOfWeek = calIter.get(Calendar.DAY_OF_WEEK);
+
+            if (dayOfWeek >= Calendar.MONDAY && dayOfWeek <= Calendar.FRIDAY) {
+
+                long segmentoStart = Math.max(calDiaStart.getTimeInMillis(), periodoCompleto.getStart().getValue());
+                long segmentoEnd = Math.min(calDiaEnd.getTimeInMillis(), finCompleto);
+
+                if (segmentoEnd - segmentoStart >= duracionMinMillis) {
+
+                    TimePeriod segmento = new TimePeriod()
+                            .setStart(new DateTime(segmentoStart))
+                            .setEnd(new DateTime(segmentoEnd));
+
+                    segmentosValidos.add(segmento);
+                }
+            }
+
+            calIter.add(Calendar.DAY_OF_YEAR, 1);
+            calIter.set(Calendar.HOUR_OF_DAY, 0);
         }
 
-        if (calStart.get(Calendar.HOUR_OF_DAY) < 6) {
-            calStart.set(Calendar.HOUR_OF_DAY, 6);
-            calStart.set(Calendar.MINUTE, 0);
-            calStart.set(Calendar.SECOND, 0);
-        }
-
-        Calendar limiteFin = (Calendar) calEnd.clone();
-        limiteFin.set(Calendar.HOUR_OF_DAY, 23);
-        limiteFin.set(Calendar.MINUTE, 0);
-        limiteFin.set(Calendar.SECOND, 0);
-
-        if (calEnd.after(limiteFin)) {
-            calEnd = limiteFin;
-        }
-
-        if (calEnd.before(calStart) || calEnd.equals(calStart)) {
-            return null;
-        }
-
-        return new TimePeriod()
-                .setStart(new DateTime(calStart.getTimeInMillis()))
-                .setEnd(new DateTime(calEnd.getTimeInMillis()));
+        return segmentosValidos;
     }
-
 
     private List<TimePeriod> fusionarIntervalosOcupados(List<TimePeriod> ocupados) {
         if (ocupados.isEmpty()) return Collections.emptyList();

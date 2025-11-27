@@ -14,13 +14,14 @@ public class APIConsultarDisponibilidad {
 
 
     public FreeBusyResponse consultarDisponibilidad(Calendar service, List<String> workerEmails) throws IOException {
-        System.out.println("\nConsultando horarios libres para los trabajadores...");
+        System.out.println("\n Consultando horarios libres para los trabajadores...");
+
 
         long currentTimeMillis = System.currentTimeMillis();
-        long oneWeekLaterMillis = currentTimeMillis + (7 * 24 * 60 * 60 * 1000);
+        long threeWeeksLaterMillis = currentTimeMillis + (21 * 24 * 60 * 60 * 1000);
 
         DateTime timeMin = new DateTime(currentTimeMillis);
-        DateTime timeMax = new DateTime(oneWeekLaterMillis);
+        DateTime timeMax = new DateTime(threeWeeksLaterMillis);
 
         List<FreeBusyRequestItem> items = workerEmails.stream()
                 .map(email -> new FreeBusyRequestItem().setId(email))
@@ -30,6 +31,7 @@ public class APIConsultarDisponibilidad {
                 .setTimeMin(timeMin)
                 .setTimeMax(timeMax)
                 .setItems(items);
+
 
         FreeBusyResponse response = service.freebusy().query(requestBody).execute();
 
