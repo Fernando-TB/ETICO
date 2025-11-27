@@ -4,6 +4,7 @@ package vista;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.time.*;
 import java.util.Map;
 import java.time.format.TextStyle;
@@ -11,9 +12,12 @@ import java.util.Locale;
 import javax.swing.text.*;
 
 
+import com.google.api.services.calendar.Calendar;
 import controlador.IControladorNavegacion;
 import controlador.IControladorAgendamiento;
 import controlador.IControladorCitas;
+import modelo.APICalendar;
+import modelo.PedirPermisosCalendar;
 
 public class CalendarioVista {
 
@@ -150,6 +154,22 @@ public class CalendarioVista {
         panelCalendario.setLayout(new GridLayout(1, 7, 5, 5));
 
 
+        Calendar service;
+        try {
+            service = PedirPermisosCalendar.getCalendarService(usuario);
+        } catch (IOException | GeneralSecurityException e) {
+            throw new RuntimeException(e);
+        }
+
+        APICalendar calendar = new APICalendar();
+
+        try {
+            APICalendar.runReadModule(service, usuario);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
         Map<LocalDate, String> citasSemana = null;
         try {
             citasSemana = controladorCitas.obtenerCitasEntreFechas(lunes, domingo, usuario);
@@ -195,7 +215,7 @@ public class CalendarioVista {
                 panelDia.add(panelContenido, BorderLayout.CENTER);
 
                 panelDia.setToolTipText("<html><p style='width:150px;'>" + cita + "</p></html>");
-            }else {
+            } else {
                 panelDia.setToolTipText("Sin citas");
             }
 

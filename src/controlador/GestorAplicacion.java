@@ -41,26 +41,33 @@ public class GestorAplicacion implements IControladorAgendamiento, IControladorA
 
         for (EventoCalendario evento : eventos) {
 
-                try {
-                    LocalDate fechaCita = LocalDate.parse(evento.getDia());
+            try {
 
-                    if (!fechaCita.isBefore(inicio) && !fechaCita.isAfter(fin)) {
+                String dia = evento.getDia().trim();
 
-                        String horaInicio = evento.getHoraMinInicio();
-                        String horaFin = evento.getHoraMinFin();
-
-                        String descripcion = evento.getNombreEvento() + ", " + horaInicio + " - " + horaFin;
-
-                        String citasPrevias = citasSemana.getOrDefault(fechaCita, "");
-                        if (!citasPrevias.isEmpty()) citasPrevias += "<br>";
-
-                        citasSemana.put(fechaCita, citasPrevias + descripcion);
-                    }
-
-                } catch (Exception e) {
-                    System.err.println("Error procesando cita desde CSV: " + evento.getNombreEvento() + " - " + e.getMessage());
+                if (dia.length() > 10) {
+                    dia = dia.substring(0, 10);
                 }
+
+                LocalDate fechaCita = LocalDate.parse(dia);
+
+                if (!fechaCita.isBefore(inicio) && !fechaCita.isAfter(fin)) {
+
+                    String horaInicio = evento.getHoraMinInicio();
+                    String horaFin = evento.getHoraMinFin();
+
+                    String descripcion = evento.getNombreEvento() + ", " + horaInicio + " - " + horaFin;
+
+                    String citasPrevias = citasSemana.getOrDefault(fechaCita, "");
+                    if (!citasPrevias.isEmpty()) citasPrevias += "<br>";
+
+                    citasSemana.put(fechaCita, citasPrevias + descripcion);
+                }
+
+            } catch (Exception e) {
+                System.err.println("Error procesando cita desde CSV: " + evento.getNombreEvento() + " - " + e.getMessage());
             }
+        }
 
         return citasSemana;
     }

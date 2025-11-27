@@ -80,7 +80,7 @@ public class MainAPI {
 
         ConversorDisponibilidadTXT conversor = new ConversorDisponibilidadTXT();
 
-        conversor.guardarDisponibilidad(huecosComunes, FREEBUSY_OUTPUT_FILE);
+        conversor.guardarDisponibilidad(huecosComunes, FREEBUSY_OUTPUT_FILE,"Reunion");
 
         System.out.println("Tiempos guardados en " + FREEBUSY_OUTPUT_FILE);
     }

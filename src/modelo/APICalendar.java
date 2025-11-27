@@ -76,13 +76,13 @@ public class APICalendar {
 
         ConversorDisponibilidadTXT conversor = new ConversorDisponibilidadTXT();
 
-        conversor.guardarDisponibilidad(huecosComunes, FREEBUSY_OUTPUT_FILE);
+        conversor.guardarDisponibilidad(huecosComunes, FREEBUSY_OUTPUT_FILE,nombre);
 
         System.out.println("Tiempos guardados en " + FREEBUSY_OUTPUT_FILE);
     }
 
 
-    private static void runReadModule(Calendar service, String trabajador) throws IOException {
+    public static void runReadModule(Calendar service, String trabajador) throws IOException {
         System.out.printf("\nDescargando eventos de Calendar para %s...\n", trabajador);
 
         APILeerCalendar apiReader = new APILeerCalendar();

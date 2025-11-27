@@ -10,23 +10,30 @@ import java.util.List;
 public class TXTtoCalendario {
 
     public Calendario TXTaCalendario(String ruta) throws IOException {
-
-        List<String> lineas = Files.readAllLines(Paths.get(ruta));
-
-        List<EventoCalendario> eventos = new ArrayList<>();
-
-        for(String linea : lineas){
-
-            EventoCalendario event = lineToEvento(linea);
-
-            eventos.add(event);
-
+        if (!Files.exists(Paths.get(ruta))) {
+            System.out.println("No existe archivo para este usuario. Creando una lista temporal");
+            return new Calendario(new ArrayList<>());
         }
 
-        Calendario calendario = new Calendario(eventos);
+        try{
+            List<String> lineas = Files.readAllLines(Paths.get(ruta));
 
-        return calendario;
+            List<EventoCalendario> eventos = new ArrayList<>();
 
+            for(String linea : lineas){
+
+                EventoCalendario event = lineToEvento(linea);
+
+                eventos.add(event);
+
+            }
+
+            Calendario calendario = new Calendario(eventos);
+            return calendario;
+        } catch(IOException e){
+            System.out.println("Error leyendo el archivo.");
+            return new Calendario(new ArrayList<>());
+        }
     }
 
     public EventoCalendario lineToEvento(String linea){
