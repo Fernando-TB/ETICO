@@ -1,13 +1,17 @@
 
+
 package vista;
 
 import controlador.IControladorAgendamiento;
+import controlador.IControladorEquipos;
 import controlador.IControladorNavegacion;
+import modelo.APICalendar;
 
 import javax.swing.*;
 import java.awt.*;
 import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
+import java.util.Collections;
 
 public class VentanaEvento extends JFrame {
 
@@ -18,14 +22,16 @@ public class VentanaEvento extends JFrame {
 
     private final IControladorAgendamiento agendador;
     private final IControladorNavegacion navegador;
+    private final IControladorEquipos equipos;
 
     private final String correoJefe;
     private final String contrasena;
     private final String rol;
 
-    public VentanaEvento(IControladorAgendamiento agendador, IControladorNavegacion navegador, String correoJefe, String contrasena, String rol) {
+    public VentanaEvento(IControladorAgendamiento agendador, IControladorNavegacion navegador, IControladorEquipos equipos, String correoJefe, String contrasena, String rol) {
         this.agendador = agendador;
         this.navegador = navegador;
+        this.equipos = equipos;
         this.correoJefe = correoJefe;
         this.contrasena = contrasena;
         this.rol = rol;
@@ -102,7 +108,17 @@ public class VentanaEvento extends JFrame {
             VentanaConfirmacionEvento confirmar = new VentanaConfirmacionEvento(this, "¿Esta seguro de que desea emitir el evento?");
             boolean continuuar = confirmar.mostrar();
 
+            if (equipos.obtenerEquipo(correoJefe).isEmpty()) return;
+
             if (!continuuar) return;
+
+            APICalendar calendar = new APICalendar();
+
+            calendar.setTRABAJADORES(equipos.obtenerEquipo(correoJefe));
+
+            calendar.setNombreEvento(titulo);
+
+            calendar.emitirEvento(minutosTotales);
 
             System.out.println("Duracion total: " + minutosTotales);
 
