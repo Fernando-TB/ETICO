@@ -1,6 +1,7 @@
 
 package modelo;
 
+import controlador.ConversorCSVEquipos;
 import controlador.ManejadorConsola;
 import controlador.ConversorCSV;
 
@@ -15,6 +16,7 @@ public class Logica {
     private final APIEscribirCalendar apiEscribirCalendar;
     private final ManejadorConsola manejadorConsola;
     private final ConversorCSV conversorCSV;
+    private final ConversorCSVEquipos conversorCSVEquipos;
 
     public Logica(ManejadorConsola manejadorConsola, ConversorCSV conversorCSV) {
 
@@ -22,6 +24,13 @@ public class Logica {
         this.manejadorConsola = manejadorConsola;
         this.conversorCSV = new ConversorCSV();
         this.apiEscribirCalendar = new APIEscribirCalendar();
+        this.conversorCSVEquipos = new ConversorCSVEquipos();
+
+    }
+
+    public boolean eliminarEquipo(String correoJefe) {
+
+        return conversorCSVEquipos.eliminarEquipo(correoJefe);
 
     }
 

@@ -18,6 +18,7 @@ public class VentanaAgregarEquipo extends JFrame {
     private JButton btnAgregar;
     private JButton btnVolver;
     private JButton btnMostrar;
+    private JButton btnEliminar;
     private final IControladorEquipos controlador;
     private final String correoJefe;
 
@@ -56,10 +57,12 @@ public class VentanaAgregarEquipo extends JFrame {
         btnAgregar = new JButton("Agregar");
         btnVolver = new JButton("Volver");
         btnMostrar = new JButton("Mostrar");
+        btnEliminar = new JButton("Eliminar");
 
         panelBotones.add(btnAgregar);
         panelBotones.add(btnVolver);
         panelBotones.add(btnMostrar);
+        panelBotones.add(btnEliminar);
 
         add(panelCorreo);
         add(panelBotones);
@@ -91,6 +94,27 @@ public class VentanaAgregarEquipo extends JFrame {
             navegador.cerrarVentanaActual(this);
         });
 
+        btnEliminar.addActionListener(e -> {
+            int confirmacion = JOptionPane.showConfirmDialog(this,
+                    "¿Está seguro de que desea eliminar TODO el equipo asociado a " + correoJefe + "? Esta acción es irreversible.",
+                    "Confirmar Eliminación",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE);
+
+            if (confirmacion == JOptionPane.YES_OPTION) {
+                boolean exito = controlador.eliminarEquipo(correoJefe);
+
+                if (exito) {
+                    JOptionPane.showMessageDialog(this, "El equipo ha sido eliminado con éxito del sistema.");
+                } else {
+                    JOptionPane.showMessageDialog(this, "Error grave al intentar eliminar el equipo del archivo CSV.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+
+
+
+
         btnMostrar.addActionListener(e -> {
             List<String> equipo = controlador.obtenerEquipo(correoJefe);
 
@@ -105,6 +129,9 @@ public class VentanaAgregarEquipo extends JFrame {
             }
 
             JOptionPane.showMessageDialog(this, listado.toString());
+
+
+
         });
     }
 }

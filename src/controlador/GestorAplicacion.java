@@ -197,6 +197,46 @@ public class GestorAplicacion implements IControladorAgendamiento, IControladorA
         return resultado;
     }
 
+    public boolean eliminarEquipo(String correoJefe) {
+        String ruta = "Equipos.csv";
+        List<String> lineasConservadas = new ArrayList<>();
+        boolean equipoEliminado = false;
+        String prefijoJefe = correoJefe + ";";
+
+
+        try (BufferedReader br = new BufferedReader(new FileReader(ruta))) {
+            String linea;
+            while ((linea = br.readLine()) != null) {
+
+                if (linea.startsWith(prefijoJefe)) {
+                    equipoEliminado = true;
+                } else {
+                    lineasConservadas.add(linea);
+                }
+            }
+        } catch (FileNotFoundException e) {
+            return true;
+        } catch (IOException e) {
+            System.err.println("Error al leer Equipos.csv para eliminación: " + e.getMessage());
+            return false;
+        }
+
+
+        if (equipoEliminado || !lineasConservadas.isEmpty()) {
+            try (PrintWriter pw = new PrintWriter(new FileWriter(ruta, false))) {
+                for (String linea : lineasConservadas) {
+                    pw.println(linea);
+                }
+                return true;
+            } catch (IOException e) {
+                System.err.println("Error al escribir Equipos.csv después de la eliminación: " + e.getMessage());
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     public void navegarAIniciarEvento(String usuario, String contrasena, String rol, JFrame ventanaActual) {
         cerrarVentanaActual(ventanaActual);
 
