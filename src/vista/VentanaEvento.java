@@ -1,5 +1,3 @@
-
-
 package vista;
 
 import controlador.IControladorAgendamiento;
@@ -11,7 +9,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
-import java.util.Collections;
 
 public class VentanaEvento extends JFrame {
 
@@ -28,7 +25,10 @@ public class VentanaEvento extends JFrame {
     private final String contrasena;
     private final String rol;
 
-    public VentanaEvento(IControladorAgendamiento agendador, IControladorNavegacion navegador, IControladorEquipos equipos, String correoJefe, String contrasena, String rol) {
+    public VentanaEvento(IControladorAgendamiento agendador, IControladorNavegacion navegador,
+                         IControladorEquipos equipos, String correoJefe,
+                         String contrasena, String rol) {
+
         this.agendador = agendador;
         this.navegador = navegador;
         this.equipos = equipos;
@@ -36,28 +36,43 @@ public class VentanaEvento extends JFrame {
         this.contrasena = contrasena;
         this.rol = rol;
 
+        Color colorFondo = new Color(41, 49, 51);
+        Color colorTexto = Color.WHITE;
+        Color colorPanelBotones = new Color(56, 65, 69);
+        Color colorBotones = new Color(34, 39, 41);
+
         setTitle("Iniciar Evento");
         setSize(400, 220);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new GridLayout(3, 1, 10, 10));
-
+        getContentPane().setBackground(colorFondo);
 
         JPanel panelTitulo = new JPanel();
-        panelTitulo.add(new JLabel("Título del Evento: "));
+        panelTitulo.setBackground(colorFondo);
+        JLabel lblTitulo = new JLabel("Título del Evento: ");
+        lblTitulo.setForeground(colorTexto);
+        panelTitulo.add(lblTitulo);
+
         txtTitulo = new JTextField(20);
         panelTitulo.add(txtTitulo);
 
-
         JPanel panelDuracion = new JPanel();
-        panelDuracion.add(new JLabel("Duración (HH:mm): "));
+        panelDuracion.setBackground(colorFondo);
+        JLabel lblDuracion = new JLabel("Duración (HH:mm): ");
+        lblDuracion.setForeground(colorTexto);
+
+        panelDuracion.add(lblDuracion);
         txtDuracion = new JTextField(10);
         panelDuracion.add(txtDuracion);
 
-
         JPanel panelBotones = new JPanel();
+        panelBotones.setBackground(colorPanelBotones);
+
         btnIniciar = new JButton("Iniciar");
         btnVolver = new JButton("Volver");
+
+
         panelBotones.add(btnIniciar);
         panelBotones.add(btnVolver);
 
@@ -71,7 +86,6 @@ public class VentanaEvento extends JFrame {
         try {
             ImageIcon Logo = new ImageIcon(getClass().getResource("/LOGO.png"));
             setIconImage(Logo.getImage());
-
         } catch (Exception e) {
             System.err.println("Error al abrir el LOGO");
         }
@@ -97,15 +111,15 @@ public class VentanaEvento extends JFrame {
 
             try {
                 duracion = LocalTime.parse(duracionStr);
-            }catch (DateTimeParseException ex) {
+            } catch (DateTimeParseException ex) {
                 JOptionPane.showMessageDialog(this, "Formato de duracion invalido (HH:mm)");
                 return;
             }
 
             int minutosTotales = duracion.getHour() * 60 + duracion.getMinute();
 
-
-            VentanaConfirmacionEvento confirmar = new VentanaConfirmacionEvento(this, "¿Esta seguro de que desea emitir el evento?");
+            VentanaConfirmacionEvento confirmar =
+                    new VentanaConfirmacionEvento(this, "¿Esta seguro de que desea emitir el evento?");
             boolean continuuar = confirmar.mostrar();
 
             if (equipos.obtenerEquipo(correoJefe).isEmpty()) return;
@@ -119,8 +133,6 @@ public class VentanaEvento extends JFrame {
             calendar.setNombreEvento(titulo);
 
             calendar.emitirEvento(minutosTotales);
-
-            System.out.println("Duracion total: " + minutosTotales);
 
             JOptionPane.showMessageDialog(this, "Evento iniciado");
 

@@ -27,6 +27,12 @@ public class VentanaJefe {
         this.agendador = agendador;
         this.contrasena = contrasena;
 
+        Color colorFondo = new Color(41, 49, 51);
+
+        Color colorTexto = Color.WHITE;
+
+        Color colorPanelBotones = new Color(56, 65, 69);
+
         this.frame = new JFrame("Ventana de Jefe - ETICO");
 
         //ICONO
@@ -42,7 +48,7 @@ public class VentanaJefe {
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setSize(300, 350);
         frame.setLocationRelativeTo(null);
-        frame.setLayout(new BorderLayout(10, 10));
+        frame.setLayout(new BorderLayout(0, 0));
 
         JPanel panelBotones = new JPanel();
 
@@ -54,12 +60,14 @@ public class VentanaJefe {
         botonIniciarEvento = new JButton("Iniciar Evento");
 
         JPanel panelNavegacion = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        panelNavegacion.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
+        panelNavegacion.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
 
 
         botonVolverLogin = new JButton("Volver al Login");
         panelNavegacion.add(botonVolverLogin);
 
+        panelBotones.setBackground(colorFondo);
+        panelNavegacion.setBackground(colorPanelBotones);
 
         panelBotones.add(botonVerHorario);
         panelBotones.add(botonAgregarEquipo);

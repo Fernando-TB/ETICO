@@ -47,11 +47,18 @@ public class CalendarioVista {
         this.contrasena = contrasena;
         this.rol = rol;
 
+        Color colorFondo = new Color(41, 49, 51);
+
+        Color colorTexto = Color.WHITE;
+
+        Color colorPanelBotones = new Color(56, 65, 69);
+
+
         frame = new JFrame("Calendario de Citas");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setSize(1000, 480);
         frame.setLocationRelativeTo(null);
-        frame.setLayout(new BorderLayout(10, 10));
+        frame.setLayout(new BorderLayout(0, 0));
 
         //ICONO
         try {
@@ -76,24 +83,33 @@ public class CalendarioVista {
 
         JPanel panelBotonesSemana = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 5));
 
+
         panelBotonesSemana.add(btnSemanaActual);
         panelBotonesSemana.add(btnSemanaSiguiente);
+
+        panelBotonesSemana.setBackground(colorFondo);
 
         panelNavegacion.add(panelBotonesSemana, BorderLayout.SOUTH);
 
         panelNavegacion.add(labelMesAnio, BorderLayout.CENTER);
+        labelMesAnio.setForeground(colorTexto);
 
+        panelNavegacion.setBackground(colorFondo);
 
         panelCalendario = new JPanel(new GridLayout(0, 1));
-        panelCalendario.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        panelCalendario.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 10));
+        panelCalendario.setBackground(colorFondo);
 
         JPanel panelContenido = new JPanel();
         panelContenido.setLayout(new BoxLayout(panelContenido, BoxLayout.Y_AXIS));
 
         panelContenido.add(crearPanelDiasSemana());
+        panelContenido.setBackground(colorFondo);
 
         JPanel contenedorCentro = new JPanel(new FlowLayout(FlowLayout.CENTER));
         contenedorCentro.add(panelCalendario);
+
+        contenedorCentro.setBackground(colorFondo);
 
         panelCalendario.setPreferredSize(new Dimension(1000, 200));
 
@@ -108,6 +124,8 @@ public class CalendarioVista {
 
         frame.add(panelPrincipal, BorderLayout.CENTER);
 
+        panelPrincipal.setBackground(colorFondo);
+
         JPanel panelInferior = new JPanel();
         panelInferior.setLayout(new FlowLayout(FlowLayout.CENTER));
         botonVolver = new JButton("Volver");
@@ -116,6 +134,9 @@ public class CalendarioVista {
         botonVolver.setFont(new Font("Arial", Font.BOLD, 13));
         panelInferior.add(botonVolver);
         frame.add(panelInferior, BorderLayout.SOUTH);
+
+        panelInferior.setBackground(colorPanelBotones);
+        frame.setBackground(colorFondo);
 
         actualizarCalendario();
         frame.setVisible(true);
@@ -139,7 +160,9 @@ public class CalendarioVista {
     }
 
     private JPanel crearPanelDiasSemana() {
+        Color colorFondo = new Color(41, 49, 51);
         JPanel panel = new JPanel(new GridLayout(1, 7));
+        panel.setBackground(colorFondo);
         return panel;
     }
 
@@ -160,9 +183,6 @@ public class CalendarioVista {
         } catch (IOException | GeneralSecurityException e) {
             throw new RuntimeException(e);
         }
-
-        APICalendar calendar = new APICalendar();
-
         try {
             APICalendar.runReadModule(service, usuario);
         } catch (IOException e) {

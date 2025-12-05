@@ -26,6 +26,10 @@ public class GestorAplicacion implements IControladorAgendamiento, IControladorA
         return logica.agendarCita(emailUsuario, fecha, horaInicio, horaFin, titulo);
     }
 
+    public boolean existeUsuario(String correo) {
+        return registroUsuarios.getBaseDeDatos().containsKey(correo);
+    }
+
     public Map<LocalDate, String> obtenerCitasEntreFechas(LocalDate inicio, LocalDate fin, String usuario) throws IOException {
 
         Map<LocalDate, String> citasSemana = new HashMap<>();
@@ -155,12 +159,12 @@ public class GestorAplicacion implements IControladorAgendamiento, IControladorA
     public void navegarAAgregarEquipo(String correo, String contrasena, String rol, JFrame ventanaActual) {
         cerrarVentanaActual(ventanaActual);
         SwingUtilities.invokeLater(() -> {
-            new VentanaAgregarEquipo(this, registroUsuarios, correo, contrasena, rol, this).setVisible(true);
+            new VentanaAgregarEquipo(this, correo, contrasena, rol, this).setVisible(true);
         });
     }
 
     public boolean agregarPersonaAEquipo(String correoJefe, String correoIntegrante) {
-        String ruta = "Equipos.csv"; // mismo directorio del proyecto
+        String ruta = "Equipos.csv";
 
         try (FileWriter fw = new FileWriter(ruta, true)) {
             fw.write(correoJefe + ";" + correoIntegrante + "\n");

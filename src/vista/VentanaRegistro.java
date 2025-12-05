@@ -37,6 +37,12 @@ public class VentanaRegistro {
 
         this.frame = new JFrame("Registro - ETICO");
 
+        Color colorFondo = new Color(41, 49, 51);
+
+        Color colorTexto = Color.WHITE;
+
+        Color colorPanelBotones = new Color(56, 65, 69);
+
         //ICONO
         try {
             ImageIcon Logo = new ImageIcon(getClass().getResource("/LOGO.png"));
@@ -49,7 +55,6 @@ public class VentanaRegistro {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(400, 250);
         frame.setLocationRelativeTo(null);
-        frame.setLayout(new BorderLayout(10, 10));
 
         JPanel panel = new JPanel(new GridLayout(5, 2, 10, 10));
         panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 10, 20));
@@ -59,23 +64,34 @@ public class VentanaRegistro {
         campoConfirmar = new JPasswordField(20);
         selectorRol = new JComboBox<>(new String[]{"Trabajador", "Jefe"});
 
-        panel.add(new JLabel("Correo Electronico:"));
+
+
+        JLabel labelCorreo = new JLabel("Correo Electronico");
+        panel.add(labelCorreo);
         panel.add(campoCorreo);
+        labelCorreo.setForeground(colorTexto);
 
-        panel.add(new JLabel("Contraseña:"));
+        JLabel labelContrasena = new JLabel("Contraseña: ");
+        panel.add(labelContrasena);
         panel.add(campoContrasena);
+        labelContrasena.setForeground(colorTexto);
 
-        panel.add(new JLabel("Confirmar contraseña:"));
+        JLabel labelConfirmarContrasena = new JLabel("Confirmar contraseña: ");
+        panel.add(labelConfirmarContrasena);
         panel.add(campoConfirmar);
+        labelConfirmarContrasena.setForeground(colorTexto);
 
-        panel.add(new JLabel("Rola:"));
+        JLabel labelRol = new JLabel("Rol: ");
+        panel.add(labelRol);
         panel.add(selectorRol);
+        labelRol.setForeground(colorTexto);
 
         panel.add(new JLabel());
         panel.add(new JLabel());
 
 
         JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
+        panelBotones.setBackground(colorPanelBotones);
 
         botonRegistrar = new JButton("Registrarse");
         botonVolver = new JButton("Volver");
@@ -85,6 +101,9 @@ public class VentanaRegistro {
 
         frame.add(panel, BorderLayout.CENTER);
         frame.add(panelBotones, BorderLayout.SOUTH);
+        frame.setBackground(colorFondo);
+
+        panel.setBackground(colorFondo);
 
 
         agregarListeners();
