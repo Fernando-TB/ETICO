@@ -27,6 +27,8 @@ public class VentanaRegistro {
     private final IControladorAutenticacion autenticador;
     private final IControladorNavegacion navegador;
 
+    final String REGEX_CORREO = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+
 
     public VentanaRegistro(IControladorAutenticacion autenticador, IControladorNavegacion navegador) {
 
@@ -96,33 +98,43 @@ public class VentanaRegistro {
 
         botonRegistrar.addActionListener(e -> {
 
-            String correo = campoCorreo.getText();
+            String correo = campoCorreo.getText().trim();
             String rol = (String) selectorRol.getSelectedItem();
             String contrasena = new String(campoContrasena.getPassword());
             String confirmar = new String(campoConfirmar.getPassword());
 
 
-
-            if (Objects.equals(contrasena, confirmar)) {
-                System.out.println("Registrando Usuario");
-            } else {
-
-                JOptionPane.showMessageDialog(frame, "Los campos de contraseñas no coinciden");
+            if (!Objects.equals(contrasena, confirmar)) {
+                JOptionPane.showMessageDialog(frame, "Los campos de contraseñas no coinciden", "Error de Validación", JOptionPane.ERROR_MESSAGE);
+                return;
             }
 
             if (autenticador.registrarNuevoUsuario(correo, contrasena, rol)) {
+
                 JOptionPane.showMessageDialog(frame, "Usuario registrado con éxito. Vuelva al Login.", "Registro Exitoso", JOptionPane.INFORMATION_MESSAGE);
 
                 campoCorreo.setText("");
                 campoContrasena.setText("");
                 campoConfirmar.setText("");
-
                 irALogin();
             } else {
-                JOptionPane.showMessageDialog(frame, "Error: El correo ya está registrado.", "Error de Registro", JOptionPane.ERROR_MESSAGE);
-            }
+                if (!Utilitarios.Validador.esCorreoValido(correo)) {
+                    JOptionPane.showMessageDialog(frame, "Formato de correo electrónico inválido. Asegúrate de incluir un '@' y al menos un punto '.' después del '@'.", "Error de Registro", JOptionPane.ERROR_MESSAGE);
+                } else {
 
+                    JOptionPane.showMessageDialog(frame, "Error: El correo ya está registrado.", "Error de Registro", JOptionPane.ERROR_MESSAGE);
+                }
+            }
         });
+
+        botonVolver.addActionListener(e -> {
+            irALogin();
+        });
+
+        botonVolver.addActionListener(e -> {
+            irALogin();
+        });
+
 
         botonVolver.addActionListener(e -> {
 

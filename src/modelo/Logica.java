@@ -2,13 +2,10 @@
 package modelo;
 
 import controlador.ConversorCSVEquipos;
-import controlador.ManejadorConsola;
+import Utilitarios.ManejadorConsola;
 import controlador.ConversorCSV;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
 
 public class Logica {
 

@@ -2,18 +2,17 @@
 package controlador;
 
 import java.io.*;
-import java.time.DateTimeException;
 import java.util.*;
 
+import Utilitarios.ManejadorConsola;
+import Utilitarios.Validador;
 import modelo.*;
 import vista.*;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import java.time.LocalDate;
-import java.time.YearMonth;
 
 import modelo.Registrar;
-import controlador.ConversorCSV;
 
 public class GestorAplicacion implements IControladorAgendamiento, IControladorAutenticacion, IControladorNavegacion, IControladorCitas, IControladorEquipos {
 
@@ -115,10 +114,6 @@ public class GestorAplicacion implements IControladorAgendamiento, IControladorA
         return logueo.obtenerRol(correo, contrasena);
     }
 
-    public boolean registrarNuevoUsuario(String correo, String contrasena, String rol) {
-        return registroUsuarios.guardarUsuario(correo, contrasena, rol);
-    }
-
     public void navegarALogin() {
         SwingUtilities.invokeLater(() -> new VentanaLogin(this, this).mostrar());
     }
@@ -133,6 +128,17 @@ public class GestorAplicacion implements IControladorAgendamiento, IControladorA
 
         CalendarioVista calendario = new CalendarioVista(usuario, contrasena, rol, this, this, this);
         calendario.mostrar();
+    }
+
+    public boolean registrarNuevoUsuario(String correo, String contrasena, String rol) {
+
+
+        if (!Validador.esCorreoValido(correo)) {
+
+            return false;
+        }
+
+        return registroUsuarios.guardarUsuario(correo, contrasena, rol);
     }
 
     public void navegarAVentanaJefe(String usuario, String contrasena, String rol, JFrame ventanaActual) {
