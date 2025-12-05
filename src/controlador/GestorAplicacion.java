@@ -19,7 +19,7 @@ public class GestorAplicacion implements IControladorAgendamiento, IControladorA
     private final Registrar registroUsuarios;
     private final Logueo logueo;
     private final Logica logica;
-    private final ConversorCSV conversorCSV;
+    private final ConversorJSON conversorJSON;
 
 
     public boolean agendarCita(String emailUsuario, String fecha, String horaInicio, String horaFin, String titulo) {
@@ -93,12 +93,7 @@ public class GestorAplicacion implements IControladorAgendamiento, IControladorA
         return lines;
     }
 
-    public void navegarAAgendarReunion(String usuario, String contrasena, String rol, JFrame ventanaActual) {
-        cerrarVentanaActual(ventanaActual);
-        SwingUtilities.invokeLater(() -> {
-            new CalendarioAgendar(this, this, usuario, contrasena, rol).mostrar();
-        });
-    }
+
 
     public GestorAplicacion() {
         this.registroUsuarios = new Registrar();
@@ -106,8 +101,8 @@ public class GestorAplicacion implements IControladorAgendamiento, IControladorA
 
         ManejadorConsola manejadorConsola = new ManejadorConsola();
 
-        this.conversorCSV = new ConversorCSV();
-        this.logica = new Logica(manejadorConsola, conversorCSV);
+        this.conversorJSON = new ConversorJSON();
+        this.logica = new Logica(manejadorConsola, conversorJSON);
     }
 
     public String intentarLogin(String correo, String contrasena) {
@@ -146,7 +141,6 @@ public class GestorAplicacion implements IControladorAgendamiento, IControladorA
         SwingUtilities.invokeLater(() -> {
             new VentanaJefe(this, this, usuario, contrasena, this).mostrar();
         });
-
 
     }
 

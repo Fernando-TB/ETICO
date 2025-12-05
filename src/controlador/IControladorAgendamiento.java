@@ -5,6 +5,7 @@ import java.util.List;
 
 public interface IControladorAgendamiento {
 
-    boolean agendarCita(String emailUsuario, String fecha, String horaInicio, String horaFin, String titulo);
     int convertirDuracionAMinutos(String duracion);
+
+    boolean agendarCita(String correoStr, String fechaStr, String horaInicioStr, String horaFinStr, String titulo);
 }

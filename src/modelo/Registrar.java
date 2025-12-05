@@ -23,7 +23,6 @@ public class Registrar {
 
         cargarUsuariosDesdeArchivo();
 
-
         if (!archivoExiste && baseDeDatosSimulada.isEmpty()) {
             Map<String, String> jefe = new HashMap<>();
             jefe.put("contrasena", "1234");

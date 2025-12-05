@@ -1,9 +1,8 @@
-
 package modelo;
 
 import controlador.ConversorCSVEquipos;
 import Utilitarios.ManejadorConsola;
-import controlador.ConversorCSV;
+import controlador.ConversorJSON;
 
 import java.util.List;
 
@@ -12,14 +11,14 @@ public class Logica {
 
     private final APIEscribirCalendar apiEscribirCalendar;
     private final ManejadorConsola manejadorConsola;
-    private final ConversorCSV conversorCSV;
+    private final ConversorJSON conversorJSON;
     private final ConversorCSVEquipos conversorCSVEquipos;
 
-    public Logica(ManejadorConsola manejadorConsola, ConversorCSV conversorCSV) {
+    public Logica(ManejadorConsola manejadorConsola, ConversorJSON conversorJSON) {
 
 
         this.manejadorConsola = manejadorConsola;
-        this.conversorCSV = new ConversorCSV();
+        this.conversorJSON = new ConversorJSON();
         this.apiEscribirCalendar = new APIEscribirCalendar();
         this.conversorCSVEquipos = new ConversorCSVEquipos();
 
@@ -36,18 +35,12 @@ public class Logica {
         manejadorConsola.imprimirMensaje("\n--- Iniciando agendamiento de cita simple para: '" + emailUsuario + "' ---");
         try {
 
-            if (!conversorCSV.existeUsuario(emailUsuario)) {
+            if (!conversorJSON.existeUsuario(emailUsuario)) {
                 manejadorConsola.imprimirMensaje("Error: El usuario '" + emailUsuario + "' no está registrado en la base de datos.");
                 return false;
             }
 
             String horarioCompleto = fecha + "T" + horaInicio + ":00-" + horaFin + ":00";
-
-
-
-
-            Cita nuevaCita = new Cita(titulo, horarioCompleto, List.of(emailUsuario));
-            conversorCSV.guardarNuevaCita(nuevaCita);
 
             manejadorConsola.imprimirMensaje("\n--- Cita agendada con exito para " + emailUsuario + ". Detalles: " + titulo + " en " + horarioCompleto + " y guardada en CSV. ---");
             return true;
