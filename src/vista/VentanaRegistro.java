@@ -27,7 +27,6 @@ public class VentanaRegistro {
     private final IControladorAutenticacion autenticador;
     private final IControladorNavegacion navegador;
 
-    final String REGEX_CORREO = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
 
 
     public VentanaRegistro(IControladorAutenticacion autenticador, IControladorNavegacion navegador) {
